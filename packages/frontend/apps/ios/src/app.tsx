@@ -3,6 +3,7 @@ import { AppContainer } from '@affine/core/desktop/components/app-container';
 import { configureMobileModules } from '@affine/core/mobile/modules';
 import { router } from '@affine/core/mobile/router';
 import { configureCommonModules } from '@affine/core/modules';
+import { AIButtonProvider } from '@affine/core/modules/ai-button';
 import {
   AuthService,
   ValidatorProvider,
@@ -32,6 +33,7 @@ import { RouterProvider } from 'react-router-dom';
 import { configureFetchProvider } from './fetch';
 import { Cookie } from './plugins/cookie';
 import { Hashcash } from './plugins/hashcash';
+import { Intelligents } from './plugins/intelligents';
 
 const future = {
   v7_startTransition: true,
@@ -74,6 +76,14 @@ framework.impl(ValidatorProvider, {
   async validate(_challenge, resource) {
     const res = await Hashcash.hash({ challenge: resource });
     return res.value;
+  },
+});
+framework.impl(AIButtonProvider, {
+  presentAIButton: () => {
+    return Intelligents.presentIntelligentsButton();
+  },
+  dismissAIButton: () => {
+    return Intelligents.dismissIntelligentsButton();
   },
 });
 const frameworkProvider = framework.provider();

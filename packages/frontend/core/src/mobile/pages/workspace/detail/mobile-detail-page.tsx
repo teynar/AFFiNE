@@ -10,6 +10,7 @@ import { useNavigateHelper } from '@affine/core/components/hooks/use-navigate-he
 import { PageHeader } from '@affine/core/components/mobile';
 import { PageDetailEditor } from '@affine/core/components/page-detail-editor';
 import { DetailPageWrapper } from '@affine/core/desktop/pages/workspace/detail-page/detail-page-wrapper';
+import { AIButtonService } from '@affine/core/modules/ai-button';
 import { EditorService } from '@affine/core/modules/editor';
 import { JournalService } from '@affine/core/modules/journal';
 import { WorkbenchService } from '@affine/core/modules/workbench';
@@ -56,6 +57,7 @@ const DetailPageImpl = () => {
     workspaceService,
     globalContextService,
     featureFlagService,
+    aIButtonService,
   } = useServices({
     WorkbenchService,
     ViewService,
@@ -64,6 +66,7 @@ const DetailPageImpl = () => {
     WorkspaceService,
     GlobalContextService,
     FeatureFlagService,
+    AIButtonService,
   });
   const editor = editorService.editor;
   const workspace = workspaceService.workspace;
@@ -107,6 +110,14 @@ const DetailPageImpl = () => {
       globalContext.docMode.set(null);
     };
   }, [doc, globalContext, mode]);
+
+  useEffect(() => {
+    aIButtonService.presentAIButton(true);
+
+    return () => {
+      aIButtonService.presentAIButton(false);
+    };
+  }, [aIButtonService]);
 
   useEffect(() => {
     if (!enableKeyboardToolbar) setDocReadonly(doc.id, true);
