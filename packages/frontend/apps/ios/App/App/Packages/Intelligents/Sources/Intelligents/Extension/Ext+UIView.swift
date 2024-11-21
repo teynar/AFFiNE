@@ -19,6 +19,15 @@ extension UIView {
     return nil
   }
 
+  func removeEveryAutoResizingMasks() {
+    var views: [UIView] = [self]
+    while let view = views.first {
+      views.removeFirst()
+      view.translatesAutoresizingMaskIntoConstraints = false
+      view.subviews.forEach { views.append($0) }
+    }
+  }
+
   #if DEBUG
     func debugFrame() {
       layer.borderWidth = 1

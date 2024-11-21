@@ -25,34 +25,44 @@ public class IntelligentsFocusApertureView: UIView {
   var contentBeginConstraints: [NSLayoutConstraint] = []
   var contentFinalConstraints: [NSLayoutConstraint] = []
 
+  public weak var delegate: (any IntelligentsFocusApertureViewDelegate)?
+
   public init() {
     super.init(frame: .zero)
 
-    let tap = UITapGestureRecognizer(
-      target: self,
-      action: #selector(dismissFocus)
-    )
-
     backgroundView.backgroundColor = .black
     backgroundView.isUserInteractionEnabled = true
-    backgroundView.addGestureRecognizer(tap)
+    backgroundView.addGestureRecognizer(UITapGestureRecognizer(
+      target: self,
+      action: #selector(dismissFocus)
+    ))
 
+    snapshotView.setContentHuggingPriority(.defaultLow, for: .vertical)
+    snapshotView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+    snapshotView.layer.contentsGravity = .top
     snapshotView.layer.masksToBounds = true
     snapshotView.contentMode = .scaleAspectFill
     snapshotView.isUserInteractionEnabled = true
-    snapshotView.addGestureRecognizer(tap)
+    snapshotView.addGestureRecognizer(UITapGestureRecognizer(
+      target: self,
+      action: #selector(dismissFocus)
+    ))
 
     addSubview(backgroundView)
     addSubview(controlButtonsPanel)
     addSubview(snapshotView)
     bringSubviewToFront(snapshotView)
 
-    var views: [UIView] = [self]
-    while let view = views.first {
-      views.removeFirst()
-      view.translatesAutoresizingMaskIntoConstraints = false
-      view.subviews.forEach { views.append($0) }
+    controlButtonsPanel.translateButton.action = { [weak self] in
+      self?.delegate?.focusApertureRequestAction(actionType: .translateTo)
     }
+    controlButtonsPanel.summaryButton.action = { [weak self] in
+      self?.delegate?.focusApertureRequestAction(actionType: .summary)
+    }
+    controlButtonsPanel.chatWithAIButton.action = { [weak self] in
+      self?.delegate?.focusApertureRequestAction(actionType: .chatWithAI)
+    }
+    removeEveryAutoResizingMasks()
   }
 
   @available(*, unavailable)
@@ -112,6 +122,7 @@ public class IntelligentsFocusApertureView: UIView {
     isUserInteractionEnabled = false
     executeAnimationDismiss {
       self.removeFromSuperview()
+      self.delegate?.focusApertureRequestAction(actionType: .dismiss)
     }
   }
 }

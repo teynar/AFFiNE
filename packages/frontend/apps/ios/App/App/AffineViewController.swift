@@ -33,7 +33,7 @@ class AFFiNEViewController: CAPBridgeViewController {
   }
 }
 
-extension AFFiNEViewController: IntelligentsButtonDelegate {
+extension AFFiNEViewController: IntelligentsButtonDelegate, IntelligentsFocusApertureViewDelegate {
   func onIntelligentsButtonTapped(_ button: IntelligentsButton) {
     guard let webView else {
       assertionFailure() // ? wdym ?
@@ -56,37 +56,55 @@ extension AFFiNEViewController: IntelligentsButtonDelegate {
         print("[?] \(self) script error: \(error.localizedDescription)")
       }
 
-      if case let .success(content) = result,
-         let res = content as? String
-      {
-        print("[*] \(self) received document with \(res.count) characters")
-        DispatchQueue.main.async {
-          self.openIntelligentsSheet(withContext: res)
-        }
-      } else {
-        DispatchQueue.main.async {
-          self.openSimpleChat()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        if case let .success(content) = result,
+           let res = content as? String
+        {
+          print("[*] \(self) received document with \(res.count) characters")
+          DispatchQueue.main.async {
+            self.openIntelligentsSheet(withContext: res)
+          }
+        } else {
+          DispatchQueue.main.async {
+            self.openSimpleChat()
+          }
         }
       }
     }
   }
 
   func openIntelligentsSheet(withContext context: String) {
-    guard let view = webView else {
+    guard let view = webView?.subviews.first else {
       assertionFailure()
       return
     }
+    assert(view is UIScrollView)
     _ = context
     let focus = IntelligentsFocusApertureView()
     focus.prepareAnimationWith(
       capturingTargetContentView: view,
       coveringRootViewController: self
     )
+    focus.delegate = self
     focus.executeAnimationKickIn()
+    dismissIntelligentsButton()
   }
 
   func openSimpleChat() {
     let targetController = IntelligentsChatController()
     presentIntoCurrentContext(withTargetController: targetController)
+  }
+
+  func focusApertureRequestAction(actionType: IntelligentsFocusApertureViewActionType) {
+    switch actionType {
+    case .translateTo:
+      fatalError("not implemented")
+    case .summary:
+      fatalError("not implemented")
+    case .chatWithAI:
+      fatalError("not implemented")
+    case .dismiss:
+      presentIntelligentsButton()
+    }
   }
 }
