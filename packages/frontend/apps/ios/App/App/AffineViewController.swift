@@ -102,7 +102,8 @@ extension AFFiNEViewController: IntelligentsButtonDelegate, IntelligentsFocusApe
     case .summary:
       fatalError("not implemented")
     case .chatWithAI:
-      fatalError("not implemented")
+      let controller = IntelligentsChatController()
+      presentIntoCurrentContext(withTargetController: controller)
     case .dismiss:
       presentIntelligentsButton()
     }
