@@ -25,7 +25,7 @@ class AttachmentBannerView: UIScrollView {
       height: attachmentSize
     )
   }
-  
+
   init() {
     super.init(frame: .zero)
 
@@ -33,7 +33,7 @@ class AttachmentBannerView: UIScrollView {
 
     showsHorizontalScrollIndicator = false
     showsVerticalScrollIndicator = false
-    
+
     rebuildViews()
   }
 
@@ -41,7 +41,7 @@ class AttachmentBannerView: UIScrollView {
   required init?(coder _: NSCoder) {
     fatalError()
   }
-  
+
   func rebuildViews() {
     subviews.forEach { $0.removeFromSuperview() }
     for (index, attachment) in attachments.enumerated() {

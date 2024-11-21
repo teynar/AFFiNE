@@ -18,20 +18,20 @@ extension UIView {
     }
     return nil
   }
-  
-#if DEBUG
-  func debugFrame() {
-    layer.borderWidth = 1
-    layer.borderColor = [
-      UIColor.red,
-      .green,
-      .blue,
-      .yellow,
-      .cyan,
-      .magenta,
-      .orange,
-    ].map(\.cgColor).randomElement()
-    subviews.forEach { $0.debugFrame() }
-  }
-#endif
+
+  #if DEBUG
+    func debugFrame() {
+      layer.borderWidth = 1
+      layer.borderColor = [
+        UIColor.red,
+        .green,
+        .blue,
+        .yellow,
+        .cyan,
+        .magenta,
+        .orange,
+      ].map(\.cgColor).randomElement()
+      subviews.forEach { $0.debugFrame() }
+    }
+  #endif
 }

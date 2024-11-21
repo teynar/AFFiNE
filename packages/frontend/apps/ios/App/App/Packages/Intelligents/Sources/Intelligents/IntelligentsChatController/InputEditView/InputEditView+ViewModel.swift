@@ -1,24 +1,22 @@
 //
-//  File.swift
+//  InputEditView+ViewModel.swift
 //  Intelligents
 //
 //  Created by 秋星桥 on 2024/11/18.
 //
 
-import UIKit
 import Combine
+import UIKit
 
 extension InputEditView {
   class ViewModel: ObservableObject {
     var cancellables: Set<AnyCancellable> = []
-    
+
     @Published var text: String = ""
     @Published var attachments: [UIImage] = []
-    
-    init() {
-      
-    }
-    
+
+    init() {}
+
     deinit {
       cancellables.forEach { $0.cancel() }
       cancellables.removeAll()
@@ -31,7 +29,7 @@ extension InputEditView.ViewModel: Hashable, Equatable {
     hasher.combine(text)
     hasher.combine(attachments)
   }
-  
+
   static func == (lhs: InputEditView.ViewModel, rhs: InputEditView.ViewModel) -> Bool {
     lhs.hashValue == rhs.hashValue
   }

@@ -7,12 +7,12 @@
 
 import UIKit
 
-class IntelligentsChatController: UIViewController {
+public class IntelligentsChatController: UIViewController {
   let header = Header()
   let inputBox = InputBox()
   let tableView = ChatTableView()
 
-  override var title: String? {
+  override public var title: String? {
     set {
       super.title = newValue
       header.titleLabel.text = newValue
@@ -22,7 +22,7 @@ class IntelligentsChatController: UIViewController {
     }
   }
 
-  init() {
+  public init() {
     super.init(nibName: nil, bundle: nil)
     title = "Chat with AI".localized()
   }
@@ -32,7 +32,7 @@ class IntelligentsChatController: UIViewController {
     fatalError()
   }
 
-  override func viewDidLoad() {
+  override public func viewDidLoad() {
     super.viewDidLoad()
     assert(navigationController != nil)
     view.backgroundColor = .secondarySystemBackground
