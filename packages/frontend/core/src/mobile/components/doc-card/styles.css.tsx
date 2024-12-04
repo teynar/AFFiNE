@@ -8,9 +8,9 @@ import { style } from '@vanilla-extract/css';
 export const card = style({
   padding: 16,
   borderRadius: 12,
-  border: `0.5px solid ${cssVarV2('layer/insideBorder/border')}`,
+  border: `0.5px solid ${cssVarV2.layer.insideBorder.border}`,
   boxShadow: '0px 2px 3px rgba(0,0,0,0.05)',
-  background: cssVarV2('layer/background/mobile/secondary'),
+  background: cssVarV2.layer.background.mobile.secondary,
 
   display: 'flex',
   flexDirection: 'column',

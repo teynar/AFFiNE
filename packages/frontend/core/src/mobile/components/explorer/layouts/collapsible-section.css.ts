@@ -28,12 +28,12 @@ export const triggerLabel = style([
     gap: 2,
     alignItems: 'center',
     justifyContent: 'start',
-    color: cssVarV2('text/primary'),
+    color: cssVarV2.text.primary,
   },
 ]);
 export const triggerCollapseIcon = style({
   vars: { '--y': '1px', '--r': '90deg' },
-  color: cssVarV2('icon/tertiary'),
+  color: cssVarV2.icon.tertiary,
   transform: 'translateY(var(--y)) rotate(var(--r))',
   transition: 'transform 0.2s',
   selectors: {

@@ -16,7 +16,7 @@ export const tag = style({
   padding: '0px 8px',
   borderRadius: 10,
   alignItems: 'center',
-  border: `1px solid ${cssVarV2('layer/insideBorder/blackBorder')}`,
+  border: `1px solid ${cssVarV2.layer.insideBorder.blackBorder}`,
   maxWidth: '100%',
 
   fontSize: 12,
@@ -40,5 +40,5 @@ export const tag = style({
 
 export const more = style({
   fontSize: 16,
-  color: cssVarV2('icon/primary'),
+  color: cssVarV2.icon.primary,
 });

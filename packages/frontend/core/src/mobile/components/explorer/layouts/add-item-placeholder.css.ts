@@ -7,7 +7,7 @@ import { iconContainer, itemRoot, levelIndent } from '../tree/node.css';
 export const wrapper = style([
   itemRoot,
   {
-    color: cssVarV2('text/tertiary'),
+    color: cssVarV2.text.tertiary,
   },
 ]);
 export const root = style({
@@ -17,7 +17,7 @@ export const root = style({
 export const iconWrapper = style([
   iconContainer,
   {
-    color: cssVarV2('text/tertiary'),
+    color: cssVarV2.text.tertiary,
     fontSize: 24,
   },
 ]);
