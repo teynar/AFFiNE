@@ -52,6 +52,24 @@ class InputEditView: UIView, UITextViewDelegate {
       ].forEach { $0.isActive = true }
     }
 
+    attachmentsEditor.readAttachments = { [weak self] in
+      self?.viewModel.attachments ?? []
+    }
+    attachmentsEditor.onAttachmentsDelete = { [weak self] index in
+      self?.viewModel.attachments.remove(at: index)
+    }
+
+    controlBanner.cameraButton.addTarget(
+      self,
+      action: #selector(takePhoto),
+      for: .touchUpInside
+    )
+    controlBanner.photoButton.addTarget(
+      self,
+      action: #selector(selectPhoto),
+      for: .touchUpInside
+    )
+
     textEditor.addSubview(placeholderLabel)
     placeholderLabel.textColor = .label.withAlphaComponent(0.25)
     placeholderLabel.font = textEditor.font
@@ -106,9 +124,7 @@ class InputEditView: UIView, UITextViewDelegate {
       if textEditor.text != viewModel.text {
         textEditor.text = viewModel.text
       }
-      if attachmentsEditor.attachments != viewModel.attachments {
-        attachmentsEditor.attachments = viewModel.attachments
-      }
+      attachmentsEditor.rebuildViews()
       parentViewController?.view.layoutIfNeeded()
     }
   }
