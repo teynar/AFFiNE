@@ -21,6 +21,18 @@ extension InputEditView {
       cancellables.forEach { $0.cancel() }
       cancellables.removeAll()
     }
+
+    func reset() {
+      text = ""
+      attachments = []
+    }
+
+    func duplicate() -> ViewModel {
+      let ans = ViewModel()
+      ans.text = text
+      ans.attachments = attachments
+      return ans
+    }
   }
 }
 
