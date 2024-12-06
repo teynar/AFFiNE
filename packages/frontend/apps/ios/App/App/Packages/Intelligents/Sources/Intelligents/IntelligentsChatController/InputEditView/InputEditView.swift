@@ -70,6 +70,7 @@ class InputEditView: UIView, UITextViewDelegate {
       for: .touchUpInside
     )
 
+    textEditor.returnKeyType = .send
     textEditor.addSubview(placeholderLabel)
     placeholderLabel.textColor = .label.withAlphaComponent(0.25)
     placeholderLabel.font = textEditor.font
