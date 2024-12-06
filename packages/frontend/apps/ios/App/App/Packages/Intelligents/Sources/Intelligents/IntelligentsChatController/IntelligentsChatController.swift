@@ -99,7 +99,7 @@ public class IntelligentsChatController: UIViewController {
       tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       tableView.bottomAnchor.constraint(equalTo: inputBox.topAnchor),
     ].forEach { $0.isActive = true }
-    
+
     view.addSubview(progressView)
     progressView.hidesWhenStopped = true
     progressView.stopAnimating()
@@ -109,14 +109,14 @@ public class IntelligentsChatController: UIViewController {
       progressView.centerYAnchor.constraint(equalTo: inputBox.centerYAnchor),
     ].forEach { $0.isActive = true }
     progressView.style = .large
-    
+
     inputBox.editor.controlBanner.sendButton.addTarget(
       self,
       action: #selector(send),
       for: .touchUpInside
     )
   }
-  
+
   @objc func send() {
     assert(Thread.isMainThread)
   }

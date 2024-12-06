@@ -420,6 +420,7 @@
 				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = 73YMMDVT2M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 73YMMDVT2M;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -450,6 +451,7 @@
 				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_TEAM = 73YMMDVT2M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 73YMMDVT2M;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
