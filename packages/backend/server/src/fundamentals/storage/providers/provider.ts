@@ -24,7 +24,7 @@ export interface ListObjectsMetadata {
   contentLength: number;
 }
 
-export type BlobInputType = Buffer | Readable | string;
+export type BlobInputType = Buffer | Uint8Array | Readable | string;
 export type BlobOutputType = Readable;
 
 export interface StorageProvider {

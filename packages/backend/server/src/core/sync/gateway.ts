@@ -237,7 +237,9 @@ export class SpaceSyncGateway
     const doc = await adapter.diff(
       spaceId,
       docId,
-      stateVector ? Buffer.from(stateVector, 'base64') : undefined
+      stateVector
+        ? new Uint8Array(Buffer.from(stateVector, 'base64'))
+        : undefined
     );
 
     if (!doc) {
@@ -246,8 +248,8 @@ export class SpaceSyncGateway
 
     return {
       data: {
-        missing: Buffer.from(doc.missing).toString('base64'),
-        state: Buffer.from(doc.state).toString('base64'),
+        missing: Buffer.from(new Uint8Array(doc.missing)).toString('base64'),
+        state: Buffer.from(new Uint8Array(doc.state)).toString('base64'),
         timestamp: doc.timestamp,
       },
     };
@@ -279,7 +281,7 @@ export class SpaceSyncGateway
     const timestamp = await adapter.push(
       spaceId,
       docId,
-      updates.map(update => Buffer.from(update, 'base64')),
+      updates.map(update => new Uint8Array(Buffer.from(update, 'base64'))),
       user.id
     );
 
@@ -323,7 +325,7 @@ export class SpaceSyncGateway
     const timestamp = await adapter.push(
       spaceId,
       docId,
-      [Buffer.from(update, 'base64')],
+      [new Uint8Array(Buffer.from(update, 'base64'))],
       user.id
     );
 
@@ -642,7 +644,12 @@ abstract class SyncSocketAdapter {
     permission?: Permission
   ): Promise<void>;
 
-  push(spaceId: string, docId: string, updates: Buffer[], editorId: string) {
+  push(
+    spaceId: string,
+    docId: string,
+    updates: Uint8Array[],
+    editorId: string
+  ) {
     this.assertIn(spaceId);
     return this.storage.pushDocUpdates(spaceId, docId, updates, editorId);
   }
@@ -675,7 +682,7 @@ class WorkspaceSyncAdapter extends SyncSocketAdapter {
   override push(
     spaceId: string,
     docId: string,
-    updates: Buffer[],
+    updates: Uint8Array[],
     editorId: string
   ) {
     const id = new DocID(docId, spaceId);

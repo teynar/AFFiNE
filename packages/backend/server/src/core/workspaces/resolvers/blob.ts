@@ -112,7 +112,7 @@ export class WorkspaceBlobResolver {
     if (checkExceeded(0)) {
       throw new BlobQuotaExceeded();
     }
-    const buffer = await new Promise<Buffer>((resolve, reject) => {
+    const buffer = await new Promise<Uint8Array>((resolve, reject) => {
       const stream = blob.createReadStream();
       const chunks: Uint8Array[] = [];
       stream.on('data', chunk => {
@@ -126,7 +126,7 @@ export class WorkspaceBlobResolver {
       });
       stream.on('error', reject);
       stream.on('end', () => {
-        const buffer = Buffer.concat(chunks);
+        const buffer = new Uint8Array(Buffer.concat(chunks));
 
         if (checkExceeded(buffer.length)) {
           reject(new BlobQuotaExceeded());

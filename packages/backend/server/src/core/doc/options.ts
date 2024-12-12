@@ -12,8 +12,12 @@ import { PermissionService } from '../permission';
 import { QuotaService } from '../quota';
 import { DocStorageOptions as IDocStorageOptions } from './storage';
 
-function compare(yBinary: Buffer, jwstBinary: Buffer, strict = false): boolean {
-  if (yBinary.equals(jwstBinary)) {
+function compare(
+  yBinary: Uint8Array,
+  jwstBinary: Uint8Array,
+  strict = false
+): boolean {
+  if (Buffer.from(yBinary).equals(Buffer.from(jwstBinary))) {
     return true;
   }
 
@@ -24,7 +28,7 @@ function compare(yBinary: Buffer, jwstBinary: Buffer, strict = false): boolean {
   const doc = new Y.Doc();
   Y.applyUpdate(doc, jwstBinary);
 
-  const yBinary2 = Buffer.from(Y.encodeStateAsUpdate(doc));
+  const yBinary2 = new Uint8Array(Y.encodeStateAsUpdate(doc));
 
   return compare(yBinary, yBinary2, true);
 }
@@ -41,7 +45,7 @@ export class DocStorageOptions implements IDocStorageOptions {
 
   mergeUpdates = async (updates: Uint8Array[]) => {
     const doc = await this.recoverDoc(updates);
-    const yjsResult = Buffer.from(Y.encodeStateAsUpdate(doc));
+    const yjsResult = new Uint8Array(Y.encodeStateAsUpdate(doc));
 
     const useYocto = await this.config.runtime.fetch(
       'doc/experimentalMergeWithYOcto'
@@ -50,16 +54,22 @@ export class DocStorageOptions implements IDocStorageOptions {
     if (useYocto) {
       metrics.jwst.counter('codec_merge_counter').add(1);
       let log = false;
-      let yoctoResult: Buffer | null = null;
+      let yoctoResult: Uint8Array | null = null;
       try {
-        yoctoResult = yotcoMergeUpdates(updates.map(Buffer.from));
+        yoctoResult = new Uint8Array(
+          yotcoMergeUpdates(updates.map(u => Buffer.from(u)))
+        );
         if (!compare(yjsResult, yoctoResult)) {
           metrics.jwst.counter('codec_not_match').add(1);
           this.logger.warn(`yocto codec result doesn't match yjs codec result`);
           log = true;
           if (this.config.node.dev) {
-            this.logger.warn(`Expected:\n  ${yjsResult.toString('hex')}`);
-            this.logger.warn(`Result:\n  ${yoctoResult.toString('hex')}`);
+            this.logger.warn(
+              `Expected:\n  ${Buffer.from(yjsResult).toString('hex')}`
+            );
+            this.logger.warn(
+              `Result:\n  ${Buffer.from(yoctoResult).toString('hex')}`
+            );
           }
         }
       } catch (e) {

@@ -307,17 +307,17 @@ export class WorkspaceResolver {
 
     if (init) {
       // convert stream to buffer
-      const buffer = await new Promise<Buffer>(resolve => {
+      const buffer = await new Promise<Uint8Array>(resolve => {
         const stream = init.createReadStream();
         const chunks: Uint8Array[] = [];
         stream.on('data', chunk => {
           chunks.push(chunk);
         });
         stream.on('error', () => {
-          resolve(Buffer.from([]));
+          resolve(new Uint8Array());
         });
         stream.on('end', () => {
-          resolve(Buffer.concat(chunks));
+          resolve(new Uint8Array(Buffer.concat(chunks)));
         });
       });
 

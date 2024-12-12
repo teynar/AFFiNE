@@ -28,7 +28,7 @@ export class WorkspaceBlobStorage {
     this.provider = this.storageFactory.create(this.config.storages.blob);
   }
 
-  async put(workspaceId: string, key: string, blob: Buffer) {
+  async put(workspaceId: string, key: string, blob: Uint8Array) {
     const meta: PutObjectMetadata = autoMetadata(blob);
 
     await this.provider.put(`${workspaceId}/${key}`, blob, meta);
