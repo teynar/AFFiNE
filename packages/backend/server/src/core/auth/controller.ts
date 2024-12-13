@@ -181,7 +181,7 @@ export class AuthController {
           throw new InvalidEmail();
         }
         // filter out alias emails
-        if (name.includes('+') || name.includes('.')) {
+        if (name.includes('+')) {
           throw new InvalidEmail();
         }
       }
