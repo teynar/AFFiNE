@@ -40,6 +40,19 @@ class ChatTableView: UIView {
     foot.widthAnchor.constraint(equalToConstant: 200).isActive = true
     tableView.tableFooterView = foot
 
+    tableView.separatorStyle = .none
+
+    putMockData()
+  }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError()
+  }
+}
+
+extension ChatTableView {
+  func putMockData() {
     DispatchQueue.main.async {
       self.dataSource = [
         .init(type: .chat, object: ChatCell.ViewModel(
@@ -84,10 +97,5 @@ class ChatTableView: UIView {
 
       self.tableView.reloadData()
     }
-  }
-
-  @available(*, unavailable)
-  required init?(coder _: NSCoder) {
-    fatalError()
   }
 }

@@ -27,11 +27,16 @@ extension ChatTableView {
       didSet { update(via: viewModel) }
     }
 
-    var isBackgroundColorActivated = false {
+    enum BackgroundColorType {
+      case clear
+      case highlight
+      case warning
+      case lightGray
+    }
+
+    var backgroundColorType: BackgroundColorType = .clear {
       didSet {
-        roundedBackgroundView.backgroundColor = isBackgroundColorActivated
-          ? .systemGray.withAlphaComponent(0.25)
-          : .clear
+        roundedBackgroundView.backgroundColor = backgroundColorType.color
       }
     }
 
@@ -39,6 +44,10 @@ extension ChatTableView {
       super.init(style: style, reuseIdentifier: reuseIdentifier)
       selectionStyle = .none
       backgroundColor = .clear
+
+      roundedBackgroundView.clipsToBounds = true
+      roundedBackgroundView.layer.cornerRadius = 8
+      roundedBackgroundView.layer.masksToBounds = true
 
       contentView.addSubview(roundedBackgroundView)
       roundedBackgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,6 +80,21 @@ extension ChatTableView {
 
     func update(via object: AnyObject?) {
       _ = object
+    }
+  }
+}
+
+extension ChatTableView.BaseCell.BackgroundColorType {
+  var color: UIColor {
+    switch self {
+    case .clear:
+      .clear
+    case .highlight:
+      .accent
+    case .warning:
+      .systemRed.withAlphaComponent(0.1)
+    case .lightGray:
+      .systemGray.withAlphaComponent(0.1)
     }
   }
 }
