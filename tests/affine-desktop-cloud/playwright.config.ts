@@ -1,6 +1,5 @@
 import { testResultDir } from '@affine-test/kit/playwright';
 import type { PlaywrightTestConfig } from '@playwright/test';
-// import { devices } from '@playwright/test';
 
 /**
  * Read environment variables from file.
@@ -21,16 +20,17 @@ const config: PlaywrightTestConfig = {
   },
   reporter: process.env.CI ? 'github' : 'list',
   webServer: [
-    // Intentionally not building the web, reminds you to run it by yourself.
     {
-      command: 'yarn -T run start:web-static',
+      command: 'yarn -T run dev',
       port: 8080,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
       stdout: 'pipe',
       env: {
+        ...process.env,
         COVERAGE: process.env.COVERAGE || 'false',
         DISTRIBUTION: 'desktop',
+        BUILD_TYPE: 'canary',
       },
     },
     {
@@ -49,7 +49,11 @@ const config: PlaywrightTestConfig = {
         DEBUG: 'affine:*',
         FORCE_COLOR: 'true',
         DEBUG_COLORS: 'true',
+        MAILER_HOST: '0.0.0.0',
+        MAILER_PORT: '1025',
         MAILER_SENDER: 'noreply@toeverything.info',
+        MAILER_USER: 'noreply@toeverything.info',
+        MAILER_PASSWORD: 'affine',
       },
     },
   ],

@@ -2,7 +2,6 @@ import assert from 'node:assert';
 
 import { testResultDir } from '@affine-test/kit/playwright';
 import type { PlaywrightTestConfig } from '@playwright/test';
-// import { devices } from '@playwright/test';
 
 /**
  * Read environment variables from file.
@@ -41,12 +40,16 @@ if (process.env.DEV_SERVER_URL) {
   );
   config.webServer = [
     {
-      command: 'yarn run start:web-static',
+      command: 'yarn -T run dev --static',
       port: 8080,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
       env: {
         COVERAGE: process.env.COVERAGE || 'false',
+        DISTRIBUTION: 'desktop',
+        BUILD_TYPE: 'canary',
+        PLAYWRIGHT_DEV_SERVER: 'true',
+        ...process.env,
       },
     },
   ];

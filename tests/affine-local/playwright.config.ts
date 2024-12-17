@@ -3,7 +3,6 @@ import type {
   PlaywrightTestConfig,
   PlaywrightWorkerOptions,
 } from '@playwright/test';
-// import { devices } from '@playwright/test';
 
 /**
  * Read environment variables from file.
@@ -44,14 +43,17 @@ const config: PlaywrightTestConfig = {
   reporter: process.env.CI ? 'github' : 'list',
 
   webServer: [
-    // Intentionally not building the web, reminds you to run it by yourself.
     {
-      command: 'yarn run start:web-static',
+      command: 'yarn -T run dev',
       port: 8080,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
       env: {
+        ...process.env,
         COVERAGE: process.env.COVERAGE || 'false',
+        DISTRIBUTION: 'web',
+        BUILD_TYPE: 'canary',
+        CI: '1',
       },
     },
   ],

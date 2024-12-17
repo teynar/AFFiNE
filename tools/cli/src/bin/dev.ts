@@ -11,13 +11,13 @@ import { getCwdFromDistribution, projectRoot } from '../config/cwd.cjs';
 import type { BuildFlags } from '../config/index.js';
 import { createWebpackConfig } from '../webpack/webpack.config.js';
 
-const flags: BuildFlags = {
-  distribution:
-    (process.env.DISTRIBUTION as BuildFlags['distribution']) ?? 'web',
+const flags: BuildFlags & { ci: boolean } = {
+  distribution: process.env.DISTRIBUTION as BuildFlags['distribution'],
   mode: 'development',
-  static: false,
+  static: process.argv.includes('--static'),
   channel: 'canary',
   coverage: process.env.COVERAGE === 'true',
+  ci: !!process.env.CI || !!process.env.IN_CI_TEST,
 };
 
 const files = ['.env', '.env.local'];
@@ -32,74 +32,77 @@ for (const file of files) {
   }
 }
 
-const buildFlags = process.argv.includes('--static')
-  ? { ...flags, static: true }
-  : ((await p.group(
-      {
-        distribution: () =>
-          p.select({
-            message: 'Distribution',
-            options: [
-              {
-                value: 'web',
-              },
-              {
-                value: 'desktop',
-              },
-              {
-                value: 'admin',
-              },
-              {
-                value: 'mobile',
-              },
-              {
-                value: 'ios',
-              },
-            ],
-            initialValue: 'web',
-          }),
-        mode: () =>
-          p.select({
-            message: 'Mode',
-            options: [
-              {
-                value: 'development',
-              },
-              {
-                value: 'production',
-              },
-            ],
-            initialValue: 'development',
-          }),
-        channel: () =>
-          p.select({
-            message: 'Channel',
-            options: [
-              {
-                value: 'canary',
-              },
-              {
-                value: 'beta',
-              },
-              {
-                value: 'stable',
-              },
-            ],
-            initialValue: 'canary',
-          }),
-        coverage: () =>
-          p.confirm({
-            message: 'Enable coverage',
-            initialValue: process.env.COVERAGE === 'true',
-          }),
-      },
-      {
-        onCancel: () => {
-          p.cancel('Operation cancelled.');
-          process.exit(0);
+const buildFlags = flags.static
+  ? flags
+  : // skip interactive mode in CI
+    flags.ci
+    ? flags
+    : ((await p.group(
+        {
+          distribution: () =>
+            p.select({
+              message: 'Distribution',
+              options: [
+                {
+                  value: 'web',
+                },
+                {
+                  value: 'desktop',
+                },
+                {
+                  value: 'admin',
+                },
+                {
+                  value: 'mobile',
+                },
+                {
+                  value: 'ios',
+                },
+              ],
+              initialValue: 'web',
+            }),
+          mode: () =>
+            p.select({
+              message: 'Mode',
+              options: [
+                {
+                  value: 'development',
+                },
+                {
+                  value: 'production',
+                },
+              ],
+              initialValue: 'development',
+            }),
+          channel: () =>
+            p.select({
+              message: 'Channel',
+              options: [
+                {
+                  value: 'canary',
+                },
+                {
+                  value: 'beta',
+                },
+                {
+                  value: 'stable',
+                },
+              ],
+              initialValue: 'canary',
+            }),
+          coverage: () =>
+            p.confirm({
+              message: 'Enable coverage',
+              initialValue: process.env.COVERAGE === 'true',
+            }),
         },
-      }
-    )) as BuildFlags);
+        {
+          onCancel: () => {
+            p.cancel('Operation cancelled.');
+            process.exit(0);
+          },
+        }
+      )) as BuildFlags & { ci: boolean });
 
 flags.distribution = buildFlags.distribution;
 flags.mode = buildFlags.mode;
@@ -134,6 +137,9 @@ try {
   const config = createWebpackConfig(cwd, flags);
   if (flags.static) {
     config.watch = false;
+    config.entry = {
+      _undefined_entry: join(import.meta.dirname, 'empty.ts'),
+    };
   }
   const compiler = webpack(config);
   // Start webpack

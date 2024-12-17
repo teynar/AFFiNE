@@ -26,14 +26,17 @@ const config: PlaywrightTestConfig = {
   retries: process.env.COPILOT ? 1 : 3,
   reporter: process.env.CI ? 'github' : 'list',
   webServer: [
-    // Intentionally not building the web, reminds you to run it by yourself.
     {
-      command: 'yarn -T run start:web-static',
+      command: 'yarn -T run dev --static',
       port: 8080,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
       env: {
+        ...process.env,
         COVERAGE: process.env.COVERAGE || 'false',
+        DISTRIBUTION: 'web',
+        BUILD_TYPE: 'canary',
+        PLAYWRIGHT_DEV_SERVER: 'true',
       },
     },
     {

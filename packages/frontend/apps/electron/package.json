@@ -42,6 +42,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.6.0",
     "@electron-forge/shared-types": "^7.6.0",
     "@emotion/react": "^11.14.0",
+    "@oxc-node/core": "^0.0.16",
     "@pengx17/electron-forge-maker-appimage": "^1.2.1",
     "@sentry/electron": "^5.8.0",
     "@sentry/esbuild-plugin": "^2.22.7",

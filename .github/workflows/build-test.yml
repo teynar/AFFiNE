@@ -271,9 +271,23 @@ jobs:
           path: ./packages/backend/native/server-native.node
           if-no-files-found: error
 
-  build-electron-renderer:
-    name: Build @affine/electron renderer
+  build-static-assets:
+    name: Build ${{ matrix.apps.name }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        apps:
+          - {
+              name: 'Electron renderer',
+              distribution: desktop,
+              directory: packages/frontend/apps/electron/renderer/dist,
+            }
+          - {
+              name: 'Web',
+              distribution: web,
+              directory: packages/frontend/apps/web/dist,
+            }
 
     steps:
       - uses: actions/checkout@v4
@@ -282,17 +296,17 @@ jobs:
         with:
           electron-install: false
           full-cache: true
-      - name: Build Electron renderer
+      - name: Build ${{ matrix.apps.name }}
         # always skip cache because its fast, and cache configuration is always changing
-        run: yarn build
+        run: yarn build --static
         env:
-          DISTRIBUTION: desktop
-      - name: zip web
-        run: tar -czf dist.tar.gz --directory=packages/frontend/apps/electron/renderer/dist .
-      - name: Upload web artifact
+          DISTRIBUTION: ${{ matrix.apps.distribution }}
+      - name: zip ${{ matrix.apps.name }}
+        run: tar -czf dist.tar.gz --directory=${{ matrix.apps.directory }} .
+      - name: Upload ${{ matrix.apps.name }} artifact
         uses: actions/upload-artifact@v4
         with:
-          name: web
+          name: ${{ matrix.apps.distribution }}
           path: dist.tar.gz
           if-no-files-found: error
 
@@ -555,12 +569,16 @@ jobs:
       matrix:
         tests:
           - name: 'Server E2E Test 1/3'
+            artifact: test-results-e2e-server-1
             script: yarn workspace @affine-test/affine-cloud e2e --forbid-only --shard=1/3
           - name: 'Server E2E Test 2/3'
+            artifact: test-results-e2e-server-2
             script: yarn workspace @affine-test/affine-cloud e2e --forbid-only --shard=2/3
           - name: 'Server E2E Test 3/3'
+            artifact: test-results-e2e-server-3
             script: yarn workspace @affine-test/affine-cloud e2e --forbid-only --shard=3/3
           - name: 'Server Desktop E2E Test'
+            artifact: test-results-e2e-server-desktop
             script: |
               yarn workspace @affine/electron build:dev
               # Workaround for Electron apps failing to initialize on Ubuntu 24.04 due to AppArmor restrictions
@@ -571,6 +589,7 @@ jobs:
     needs:
       - build-server-native
       - build-native
+      - build-static-assets
     services:
       postgres:
         image: postgres
@@ -601,6 +620,18 @@ jobs:
           playwright-install: true
           hard-link-nm: false
 
+      - name: Download desktop artifact
+        uses: ./.github/actions/download-static-zip
+        with:
+          path: packages/frontend/apps/electron/renderer/dist
+          name: desktop
+
+      - name: Download web artifact
+        uses: ./.github/actions/download-static-zip
+        with:
+          path: packages/frontend/apps/web/dist
+          name: web
+
       - name: Download server-native.node
         uses: actions/download-artifact@v4
         with:
@@ -628,7 +659,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-e2e-server
+          name: test-results-e2e-server-${{ matrix.tests.artifact }}
           path: ./test-results
           if-no-files-found: ignore
 
@@ -668,7 +699,7 @@ jobs:
               test: true,
             }
     needs:
-      - build-electron-renderer
+      - build-static-assets
       - build-native
     steps:
       - uses: actions/checkout@v4
@@ -699,10 +730,17 @@ jobs:
         shell: bash
         run: yarn workspace @affine/electron vitest
 
-      - name: Download web artifact
-        uses: ./.github/actions/download-web
+      - name: Download desktop artifact (For Bundle)
+        uses: ./.github/actions/download-static-zip
         with:
           path: packages/frontend/apps/electron/resources/web-static
+          name: desktop
+
+      - name: Download desktop artifact
+        uses: ./.github/actions/download-static-zip
+        with:
+          path: packages/frontend/apps/electron/renderer/dist
+          name: desktop
 
       - name: Build Desktop Layers
         run: yarn workspace @affine/electron build
@@ -745,7 +783,7 @@ jobs:
       - name: Output check
         if: ${{ matrix.spec.os == 'macos-14' && matrix.spec.arch == 'arm64' }}
         run: |
-          yarn workspace @affine/electron exec node --loader ts-node/esm/transpile-only ./scripts/macos-arm64-output-check.ts
+          yarn workspace @affine/electron exec node --import @oxc-node/core/register ./scripts/macos-arm64-output-check.ts
 
       - name: Upload test results
         if: ${{ failure() }}
@@ -774,7 +812,7 @@ jobs:
       - unit-test
       - build-native
       - build-server-native
-      - build-electron-renderer
+      - build-static-assets
       - server-test
       - rust-test
       - copilot-api-test

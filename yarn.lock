@@ -213,6 +213,7 @@ __metadata:
     "@clack/prompts": "npm:^0.8.2"
     "@magic-works/i18n-codegen": "npm:^0.6.1"
     "@napi-rs/simple-git": "npm:^0.1.19"
+    "@oxc-node/core": "npm:^0.0.16"
     "@perfsee/webpack": "npm:^1.13.0"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.15"
     "@sentry/webpack-plugin": "npm:^2.22.7"
@@ -235,8 +236,7 @@ __metadata:
     style-loader: "npm:^4.0.0"
     swc-loader: "npm:^0.2.6"
     tailwindcss: "npm:^3.4.16"
-    terser-webpack-plugin: "npm:^5.3.10"
-    ts-node: "npm:^10.9.2"
+    terser-webpack-plugin: "npm:^5.3.11"
     vite: "npm:^6.0.3"
     webpack: "npm:^5.97.1"
     webpack-dev-server: "npm:^5.2.0"
@@ -477,6 +477,7 @@ __metadata:
     "@electron-forge/plugin-auto-unpack-natives": "npm:^7.6.0"
     "@electron-forge/shared-types": "npm:^7.6.0"
     "@emotion/react": "npm:^11.14.0"
+    "@oxc-node/core": "npm:^0.0.16"
     "@pengx17/electron-forge-maker-appimage": "npm:^1.2.1"
     "@sentry/electron": "npm:^5.8.0"
     "@sentry/esbuild-plugin": "npm:^2.22.7"
@@ -32198,7 +32199,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser-webpack-plugin@npm:^5.3.10":
+"terser-webpack-plugin@npm:^5.3.10, terser-webpack-plugin@npm:^5.3.11":
   version: 5.3.11
   resolution: "terser-webpack-plugin@npm:5.3.11"
   dependencies:

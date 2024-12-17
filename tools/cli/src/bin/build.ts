@@ -6,7 +6,6 @@ import { getCwdFromDistribution } from '../config/cwd.cjs';
 import type { BuildFlags } from '../config/index.js';
 import { createWebpackConfig } from '../webpack/webpack.config.js';
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const buildType = process.env.BUILD_TYPE_OVERRIDE || process.env.BUILD_TYPE;
 
 if (process.env.BUILD_TYPE_OVERRIDE) {
@@ -46,15 +45,14 @@ const flags = {
   channel: getChannel(),
   coverage: process.env.COVERAGE === 'true',
   entry,
-  static: false,
+  static: process.argv.includes('--static'),
 } satisfies BuildFlags;
 
 spawn('yarn', ['workspace', '@affine/i18n', 'build'], {
   stdio: 'inherit',
 });
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-webpack(createWebpackConfig(cwd!, flags), (err, stats) => {
+webpack(createWebpackConfig(cwd, flags), (err, stats) => {
   if (err) {
     console.error(err);
     process.exit(1);

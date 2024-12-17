@@ -178,6 +178,9 @@ export function createWebpackConfig(cwd: string, flags: BuildFlags) {
 
   return merge(config, {
     entry,
-    plugins: Object.keys(entry).map(createHTMLPlugins).flat(),
+    plugins:
+      flags.static && process.env.PLAYWRIGHT_DEV_SERVER
+        ? []
+        : Object.keys(entry).map(createHTMLPlugins).flat(),
   });
 }

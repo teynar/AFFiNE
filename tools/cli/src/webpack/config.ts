@@ -31,7 +31,7 @@ const OptimizeOptionOptions: (
     new TerserPlugin({
       minify: TerserPlugin.swcMinify,
       exclude: [/plugins\/.+\/.+\.js$/, /plugins\/.+\/.+\.mjs$/],
-      parallel: true,
+      parallel: false,
       extractComments: true,
       terserOptions: {
         ecma: 2020,
@@ -363,6 +363,16 @@ export const createConfiguration: (
       historyApiFallback: true,
       static: [
         {
+          directory: join(cwd, 'dist'),
+          publicPath: '/',
+          watch: !buildFlags.static,
+        },
+        {
+          directory: join(cwd, 'public'),
+          publicPath: '/',
+          watch: !buildFlags.static,
+        },
+        {
           directory: join(
             projectRoot,
             'packages',
@@ -370,11 +380,6 @@ export const createConfiguration: (
             'core',
             'public'
           ),
-          publicPath: '/',
-          watch: !buildFlags.static,
-        },
-        {
-          directory: join(cwd, 'public'),
           publicPath: '/',
           watch: !buildFlags.static,
         },

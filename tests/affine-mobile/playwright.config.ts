@@ -49,12 +49,16 @@ const config: PlaywrightTestConfig = {
   webServer: [
     // Intentionally not building the web, reminds you to run it by yourself.
     {
-      command: 'yarn workspace @affine/mobile static-server',
+      command: 'yarn -T run dev',
       port: 8080,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
       env: {
         COVERAGE: process.env.COVERAGE || 'false',
+        DISTRIBUTION: 'mobile',
+        BUILD_TYPE: 'canary',
+        CI: '1',
+        ...process.env,
       },
     },
   ],
