@@ -1,6 +1,14 @@
+import { stopPropagation } from '@affine/core/utils';
 import type { EditorHost } from '@blocksuite/affine/block-std';
 import { type AIError, openFileOrFiles } from '@blocksuite/affine/blocks';
-import { assertExists, WithDisposable } from '@blocksuite/affine/global/utils';
+import {
+  assertExists,
+  SignalWatcher,
+  WithDisposable,
+} from '@blocksuite/affine/global/utils';
+import { unsafeCSSVarV2 } from '@blocksuite/affine-shared/theme';
+import { PublishIcon } from '@blocksuite/icons/lit';
+import type { Signal } from '@preact/signals-core';
 import { css, html, LitElement, nothing } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
@@ -24,7 +32,12 @@ function getFirstTwoLines(text: string) {
   return lines.slice(0, 2);
 }
 
-export class ChatPanelInput extends WithDisposable(LitElement) {
+export interface AINetworkSearchConfig {
+  enabled: Signal<boolean | undefined>;
+  setEnabled: (state: boolean) => void;
+}
+
+export class ChatPanelInput extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = css`
     .chat-panel-input {
       display: flex;
@@ -108,6 +121,20 @@ export class ChatPanelInput extends WithDisposable(LitElement) {
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+
+      .chat-network-search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+          width: 20px;
+          height: 20px;
+          color: ${unsafeCSSVarV2('icon/primary')};
+        }
+      }
+      .chat-network-search[data-active='true'] svg {
+        color: ${unsafeCSSVarV2('icon/activated')};
       }
     }
 
@@ -235,6 +262,9 @@ export class ChatPanelInput extends WithDisposable(LitElement) {
   @property({ attribute: false })
   accessor cleanupHistories!: () => Promise<void>;
 
+  @property({ attribute: false })
+  accessor networkSearchConfig!: AINetworkSearchConfig;
+
   private _addImages(images: File[]) {
     const oldImages = this.chatContextValue.images;
     this.updateContext({
@@ -295,6 +325,14 @@ export class ChatPanelInput extends WithDisposable(LitElement) {
       </div>
     `;
   }
+
+  private readonly _toggleNetworkSearch = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const enable = this.networkSearchConfig.enabled.value;
+    this.networkSearchConfig.setEnabled(!enable);
+  };
 
   override connectedCallback() {
     super.connectedCallback();
@@ -398,6 +436,15 @@ export class ChatPanelInput extends WithDisposable(LitElement) {
             data-testid="chat-panel-clear"
           >
             ${ChatClearIcon}
+          </div>
+          <div
+            class="chat-network-search"
+            data-testid="chat-network-search"
+            data-active=${!!this.networkSearchConfig.enabled.value}
+            @click=${this._toggleNetworkSearch}
+            @pointerdown=${stopPropagation}
+          >
+            ${PublishIcon()}
           </div>
           ${images.length < MaximumImageCount
             ? html`<div

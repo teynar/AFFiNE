@@ -1,5 +1,6 @@
 import { AIProvider } from '@affine/core/blocksuite/presets/ai';
 import { toggleGeneralAIOnboarding } from '@affine/core/components/affine/ai-onboarding/apis';
+import type { AINetworkSearchService } from '@affine/core/modules/ai-button/services/network-search';
 import type { GlobalDialogService } from '@affine/core/modules/dialogs';
 import {
   type getCopilotHistoriesQuery,
@@ -17,6 +18,7 @@ import {
   forkCopilotSession,
   textToText,
   toImage,
+  updateChatSession,
 } from './request';
 import { setupTracker } from './tracker';
 
@@ -39,12 +41,21 @@ const processTypeToPromptName = new Map(
 
 // a single workspace should have only a single chat session
 // user-id:workspace-id:doc-id -> chat session id
-const chatSessions = new Map<string, Promise<string>>();
+const chatSessions = new Map<
+  string,
+  { getSessionId: Promise<string>; promptName: string }
+>();
 
 export function setupAIProvider(
   client: CopilotClient,
-  globalDialogService: GlobalDialogService
+  globalDialogService: GlobalDialogService,
+  networkSearchService: AINetworkSearchService
 ) {
+  function getChatPrompt() {
+    return networkSearchService.enabled.value
+      ? 'Search With AFFiNE AI'
+      : 'Chat With AFFiNE AI';
+  }
   async function getChatSessionId(workspaceId: string, docId: string) {
     const userId = (await AIProvider.userInfo)?.id;
 
@@ -53,19 +64,33 @@ export function setupAIProvider(
     }
 
     const storeKey = `${userId}:${workspaceId}:${docId}`;
+    const promptName = getChatPrompt();
     if (!chatSessions.has(storeKey)) {
-      chatSessions.set(
-        storeKey,
-        createChatSession({
+      chatSessions.set(storeKey, {
+        getSessionId: createChatSession({
           client,
           workspaceId,
           docId,
-        })
-      );
+          promptName,
+        }),
+        promptName,
+      });
     }
     try {
-      const sessionId = await chatSessions.get(storeKey);
-      assertExists(sessionId);
+      const { getSessionId, promptName: prevName } =
+        chatSessions.get(storeKey)!;
+      const sessionId = await getSessionId;
+      //update prompt name
+      if (prevName !== promptName) {
+        await updateChatSession({
+          sessionId,
+          client,
+          workspaceId,
+          docId,
+          promptName,
+        });
+        chatSessions.set(storeKey, { getSessionId, promptName });
+      }
       return sessionId;
     } catch (err) {
       // do not cache the error
