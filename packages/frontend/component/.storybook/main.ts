@@ -4,6 +4,7 @@ import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import swc from 'unplugin-swc';
 import { mergeConfig } from 'vite';
 import { getBuildConfig } from '@affine-tools/utils/build-config';
+import { Package } from '@affine-tools/utils/workspace';
 
 export default {
   stories: ['../src/ui/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
@@ -55,12 +56,12 @@ export default {
       define: {
         'process.env.CAPTCHA_SITE_KEY': `"${process.env.CAPTCHA_SITE_KEY}"`,
         ...Object.entries(
-          getBuildConfig({
-            distribution: 'web',
-            mode: 'development',
-            channel: 'canary',
-            static: false,
-            coverage: false,
+          getBuildConfig(new Package('@affine/component'), {
+            mode:
+              process.env.NODE_ENV === 'production'
+                ? 'production'
+                : 'development',
+            channel: (process.env.BUILD_TYPE as any) ?? 'canary',
           })
         ).reduce((envs, [key, value]) => {
           envs[`BUILD_CONFIG.${key}`] = JSON.stringify(value);
