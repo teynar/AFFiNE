@@ -13,7 +13,7 @@ path = "uniffi-bindgen.rs"
 
 [dependencies]
 affine_common = { workspace = true }
-uniffi = { version = "0.28", features = ["cli"] }
+uniffi        = { version = "0.28", features = ["cli"] }
 
 [build-dependencies]
 uniffi = { version = "0.28", features = ["build"] }

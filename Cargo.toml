@@ -1,40 +1,50 @@
 [workspace]
-members  = [
-    "./packages/backend/native",
-    "./packages/common/native",
-    "./packages/frontend/native",
-    "./packages/frontend/native/sqlite_v1",
-    "./packages/frontend/native/nbstore",
-    "./packages/frontend/native/schema",
-    "./packages/frontend/mobile-native",
+members = [
+  "./packages/backend/native",
+  "./packages/common/native",
+  "./packages/frontend/mobile-native",
+  "./packages/frontend/native",
+  "./packages/frontend/native/media_capture",
+  "./packages/frontend/native/nbstore",
+  "./packages/frontend/native/schema",
+  "./packages/frontend/native/sqlite_v1",
 ]
 resolver = "2"
 
 [workspace.dependencies]
-affine_common = { path = "./packages/common/native" }
-criterion2    = { version = "2", default-features = false }
-anyhow        = "1"
-chrono        = "0.4"
-dotenvy        = "0.15"
-file-format   = { version = "0.26", features = ["reader"] }
-mimalloc      = "0.1"
-napi          = { version = "3.0.0-alpha.12", features = ["async", "chrono_date", "error_anyhow", "napi9", "serde"] }
-napi-build    = { version = "2" }
-napi-derive   = { version = "3.0.0-alpha.12" }
-notify        = { version = "7", features = ["serde"] }
-once_cell     = "1"
-parking_lot   = "0.12"
-rand          = "0.8"
-rayon         = "1.10"
-serde         = "1"
-serde_json    = "1"
-sha3          = "0.10"
-sqlx          = { version = "0.8", default-features = false, features = ["chrono", "macros", "migrate", "runtime-tokio", "sqlite", "tls-rustls"] }
-tiktoken-rs   = "0.6"
-tokio         = "1.37"
-uuid          = "1.8"
-v_htmlescape  = "0.15"
-y-octo        = { git = "https://github.com/y-crdt/y-octo.git", branch = "main" }
+affine_common    = { path = "./packages/common/native" }
+anyhow           = "1"
+block2           = "0.5"
+chrono           = "0.4"
+core-foundation  = { version = "0.10.0", features = ["with-uuid"] }
+coreaudio-rs     = { version = "0.12" }
+criterion2       = { version = "2", default-features = false }
+dispatch2        = "0.1"
+dotenvy          = "0.15"
+file-format      = { version = "0.26", features = ["reader"] }
+mimalloc         = "0.1"
+napi             = { version = "3.0.0-alpha.12", features = ["async", "chrono_date", "error_anyhow", "napi9", "serde"] }
+napi-build       = { version = "2" }
+napi-derive      = { version = "3.0.0-alpha.12" }
+notify           = { version = "7", features = ["serde"] }
+objc2            = "0.5"
+objc2-foundation = { version = "0.2", features = ["all"] }
+once_cell        = "1"
+parking_lot      = "0.12"
+rand             = "0.8"
+rayon            = "1.10"
+rubato           = "0.16"
+screencapturekit = { version = "0.3" }
+serde            = "1"
+serde_json       = "1"
+sha3             = "0.10"
+sqlx             = { version = "0.8", default-features = false, features = ["chrono", "macros", "migrate", "runtime-tokio", "sqlite", "tls-rustls"] }
+thiserror        = "2"
+tiktoken-rs      = "0.6"
+tokio            = "1.37"
+uuid             = "1"
+v_htmlescape     = "0.15"
+y-octo           = { git = "https://github.com/y-crdt/y-octo.git", branch = "main" }
 
 [profile.dev.package.sqlx-macros]
 opt-level = 3
