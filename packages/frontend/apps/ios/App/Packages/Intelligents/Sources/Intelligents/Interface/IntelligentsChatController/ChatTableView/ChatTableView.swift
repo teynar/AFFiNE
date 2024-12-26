@@ -73,45 +73,14 @@ class ChatTableView: UIView {
     }
 
     scrollAnimationController.delegatingObject(self)
-    putMockData()
   }
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
     fatalError()
   }
-}
-
-extension ChatTableView {
-  func putMockData() {
-    DispatchQueue.main.async {
-      let json: [String: Any] = ["query": """
-      {
-         currentUser {
-           email
-           name
-         }
-       }
-      """, "variables": [:]]
-
-      let jsonData = try? JSONSerialization.data(withJSONObject: json)
-
-      let url = URL(string: "https://affine.fail/graphql")!
-
-      var request = URLRequest(url: url)
-      request.httpMethod = "POST"
-      request.allHTTPHeaderFields = [
-        "content-type": "application/json",
-      ]
-      request.httpBody = jsonData
-      URLSession.shared.dataTask(with: request) { v1, _, _ in
-        guard let data = v1 else { return }
-        let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-        print(json)
-      }.resume()
-
-      self.tableView.reloadData()
-      self.scrollToBottom()
-    }
+  
+  func reloadData() {
+    tableView.reloadData()
   }
 }

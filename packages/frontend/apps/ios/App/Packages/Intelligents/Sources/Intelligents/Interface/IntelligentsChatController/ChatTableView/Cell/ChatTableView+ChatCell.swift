@@ -106,7 +106,7 @@ extension ChatTableView {
 extension ChatTableView.ChatCell {
   class ViewModel {
     let participant: Participant
-    let markdownDocument: String
+    var markdownDocument: String
 
     init(participant: Participant, markdownDocument: String) {
       self.participant = participant

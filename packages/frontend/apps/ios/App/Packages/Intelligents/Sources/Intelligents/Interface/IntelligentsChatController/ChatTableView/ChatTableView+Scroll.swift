@@ -26,13 +26,22 @@ extension ChatTableView: UIScrollViewDelegate, DisplayLinkDelegate {
   private func tikVsync(deltaTime: TimeInterval) {
     guard scrollToBottomEnabled else { return }
     guard scrollToBottomAllowed else { return }
+    // read from contentSize if not needed to scroll
+    guard tableView.contentSize.height > tableView.bounds.height else {
+      resetAnimationContext(to: tableView.contentOffset.y)
+      return
+    }
+    guard abs(bottomLocationY - tableView.contentOffset.y) > 1 else {
+      return
+    }
     scrollAnimationContext.setTarget(bottomLocationY)
     scrollAnimationContext.update(withDeltaTime: deltaTime)
+    print("[*] moving from \(tableView.contentOffset.y) to \(scrollAnimationContext.context.targetPos)")
     tableView.contentOffset.y = scrollAnimationContext.value
   }
 
   @inline(__always)
-  private func resetAnimationContext(to offset: CGFloat) {
+  func resetAnimationContext(to offset: CGFloat) {
     scrollAnimationContext.context = .init(
       currentPos: offset,
       currentVel: 0,

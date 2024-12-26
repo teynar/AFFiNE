@@ -5,6 +5,7 @@
 //  Created by 秋星桥 on 2024/11/18.
 //
 
+import LDSwiftEventSource
 import UIKit
 
 public class IntelligentsChatController: UIViewController {
@@ -15,9 +16,13 @@ public class IntelligentsChatController: UIViewController {
   let tableView = ChatTableView()
 
   var inputBoxKeyboardAdapterHeightConstraint = NSLayoutConstraint()
-  
-  var sessionID: String = ""
-  
+
+  var sessionID: String = "" {
+    didSet { print("[*] new sessionID: \(sessionID)") }
+  }
+
+  var chatTask: EventSource?
+
   override public var title: String? {
     set {
       super.title = newValue
@@ -55,6 +60,8 @@ public class IntelligentsChatController: UIViewController {
 
   deinit {
     NotificationCenter.default.removeObserver(self)
+    chatTask?.stop()
+    chatTask = nil
   }
 
   override public func viewDidLoad() {
@@ -63,11 +70,24 @@ public class IntelligentsChatController: UIViewController {
     view.backgroundColor = .secondarySystemBackground
 
     hideKeyboardWhenTappedAround()
+
+    view.addSubview(header)
+    view.addSubview(tableView)
+    view.addSubview(inputBoxKeyboardAdapter)
+    view.addSubview(inputBox)
+    view.addSubview(progressView)
     setupLayout()
+
+    chat_onLoad()
+  }
+
+  override public func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    chatTask?.stop()
+    chatTask = nil
   }
 
   func setupLayout() {
-    view.addSubview(header)
     header.translatesAutoresizingMaskIntoConstraints = false
     [
       header.topAnchor.constraint(equalTo: view.topAnchor),
@@ -76,7 +96,6 @@ public class IntelligentsChatController: UIViewController {
       header.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44),
     ].forEach { $0.isActive = true }
 
-    view.addSubview(inputBoxKeyboardAdapter)
     inputBoxKeyboardAdapter.translatesAutoresizingMaskIntoConstraints = false
     [
       inputBoxKeyboardAdapter.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -87,7 +106,6 @@ public class IntelligentsChatController: UIViewController {
     inputBoxKeyboardAdapterHeightConstraint.isActive = true
     inputBoxKeyboardAdapter.backgroundColor = inputBox.backgroundView.backgroundColor
 
-    view.addSubview(inputBox)
     inputBox.translatesAutoresizingMaskIntoConstraints = false
     [
       inputBox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -95,7 +113,6 @@ public class IntelligentsChatController: UIViewController {
       inputBox.bottomAnchor.constraint(equalTo: inputBoxKeyboardAdapter.topAnchor),
     ].forEach { $0.isActive = true }
 
-    view.addSubview(tableView)
     tableView.translatesAutoresizingMaskIntoConstraints = false
     [
       tableView.topAnchor.constraint(equalTo: header.bottomAnchor),
@@ -104,7 +121,12 @@ public class IntelligentsChatController: UIViewController {
       tableView.bottomAnchor.constraint(equalTo: inputBox.topAnchor, constant: 16),
     ].forEach { $0.isActive = true }
 
-    view.addSubview(progressView)
+    inputBox.editor.controlBanner.sendButton.addTarget(
+      self,
+      action: #selector(chat_onSend),
+      for: .touchUpInside
+    )
+
     progressView.hidesWhenStopped = true
     progressView.stopAnimating()
     progressView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,12 +135,11 @@ public class IntelligentsChatController: UIViewController {
       progressView.centerYAnchor.constraint(equalTo: inputBox.centerYAnchor),
     ].forEach { $0.isActive = true }
     progressView.style = .large
-
-    view.bringSubviewToFront(inputBox)
-    inputBox.editor.controlBanner.sendButton.addTarget(
-      self,
-      action: #selector(chat_onSend),
-      for: .touchUpInside
-    )
+  }
+  
+  public override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    tableView.scrollToBottomEnabled = true
+    tableView.scrollToBottomAllowed = true
   }
 }

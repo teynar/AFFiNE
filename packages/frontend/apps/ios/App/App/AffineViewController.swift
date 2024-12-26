@@ -42,7 +42,7 @@ extension AFFiNEViewController: IntelligentsButtonDelegate, IntelligentsFocusApe
     }
 
     button.beginProgress()
-    
+
     let upstreamReaderScript = "window.getCurrentServerBaseUrl();"
     webView.evaluateJavaScript(upstreamReaderScript) { result, _ in
       if let baseUrl = result as? String {

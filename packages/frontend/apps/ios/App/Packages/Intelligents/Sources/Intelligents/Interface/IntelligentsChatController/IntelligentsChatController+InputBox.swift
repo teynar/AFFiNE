@@ -20,7 +20,10 @@ extension IntelligentsChatController {
       editor.textEditor.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
       editor.placeholderText = "Summarize this article for me...".localized()
 
-      backgroundView.backgroundColor = .systemBackground
+      backgroundView.backgroundColor = .init(
+        light: .init(white: 1, alpha: 1),
+        dark: .init(white: 0.15, alpha: 1)
+      )
       backgroundView.layer.cornerRadius = 16
       backgroundView.layer.shadowColor = UIColor.black.withAlphaComponent(0.25).cgColor
       backgroundView.layer.shadowOffset = .init(width: 0, height: 0)

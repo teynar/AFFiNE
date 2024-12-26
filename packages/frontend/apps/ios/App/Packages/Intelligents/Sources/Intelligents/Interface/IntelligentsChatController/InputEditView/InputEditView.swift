@@ -127,6 +127,7 @@ class InputEditView: UIView, UITextViewDelegate {
       }
       attachmentsEditor.rebuildViews()
       parentViewController?.view.layoutIfNeeded()
+      updatePlaceholderVisibility()
     }
   }
 }

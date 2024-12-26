@@ -11,4 +11,17 @@ extension UIColor {
   static var accent: UIColor {
     Constant.affineTintColor
   }
+
+  convenience init(light: UIColor, dark: UIColor) {
+    self.init(dynamicProvider: { traitCollection in
+      switch traitCollection.userInterfaceStyle {
+      case .light:
+        light
+      case .dark:
+        dark
+      default:
+        light
+      }
+    })
+  }
 }
