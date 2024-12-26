@@ -17,8 +17,10 @@ fi
 echo "[+] setting up the project"
 
 yarn install
-BUILD_TYPE=canary PUBLIC_PATH="/" yarn workspace @affine/ios build
-yarn workspace @affine/ios cap sync
+export BUILD_TYPE=canary
+export PUBLIC_PATH="/"
+yarn affine @affine/ios build
+yarn affine @affine/ios cap sync
 
 rustup target add aarch64-apple-ios
 rustup target add aarch64-apple-ios-sim
@@ -26,4 +28,4 @@ rustup target add aarch64-apple-darwin
 
 echo "[+] setup complete"
 
-yarn workspace @affine/ios cap open ios
+yarn affine @affine/ios cap open ios
