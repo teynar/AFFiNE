@@ -1,21 +1,20 @@
 import { toast } from '@blocksuite/affine-components/toast';
+import type { EmbedCardStyle } from '@blocksuite/affine-model';
+import {
+  EMBED_CARD_HEIGHT,
+  EMBED_CARD_WIDTH,
+} from '@blocksuite/affine-shared/consts';
 import { EmbedOptionProvider } from '@blocksuite/affine-shared/services';
 import type { EditorHost } from '@blocksuite/block-std';
 import { ShadowlessElement } from '@blocksuite/block-std';
-import {
-  assertExists,
-  Bound,
-  Vec,
-  WithDisposable,
-} from '@blocksuite/global/utils';
+import { GfxControllerIdentifier } from '@blocksuite/block-std/gfx';
+import { Bound, Vec, WithDisposable } from '@blocksuite/global/utils';
 import type { BlockModel } from '@blocksuite/store';
 import { html } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import type { EdgelessRootBlockComponent } from '../../../../root-block/edgeless/edgeless-root-block.js';
-import { EMBED_CARD_HEIGHT, EMBED_CARD_WIDTH } from '../../../consts.js';
-import type { EmbedCardStyle } from '../../../types.js';
 import { getRootByEditorHost, isValidUrl } from '../../../utils/index.js';
 import { embedCardModalStyles } from './styles.js';
 
@@ -67,10 +66,19 @@ export class EmbedCardCreateModal extends WithDisposable(ShadowlessElement) {
       const edgelessRoot = getRootByEditorHost(
         this.host
       ) as EdgelessRootBlockComponent | null;
-      assertExists(edgelessRoot);
+      if (!edgelessRoot) {
+        return;
+      }
 
-      const surface = edgelessRoot.surface;
-      const center = Vec.toVec(surface.renderer.viewport.center);
+      const gfx = this.host.std.get(GfxControllerIdentifier);
+
+      const viewport = gfx.viewport;
+      const surfaceModel = gfx.surface;
+      if (!surfaceModel) {
+        return;
+      }
+
+      const center = Vec.toVec(viewport.center);
       edgelessRoot.service.addBlock(
         flavour,
         {
@@ -82,10 +90,10 @@ export class EmbedCardCreateModal extends WithDisposable(ShadowlessElement) {
           ).serialize(),
           style: targetStyle,
         },
-        surface.model
+        surfaceModel
       );
 
-      edgelessRoot.gfx.tool.setTool('default');
+      gfx.tool.setTool('default');
     }
     this.onConfirm();
     this.remove();

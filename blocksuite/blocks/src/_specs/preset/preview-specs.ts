@@ -1,3 +1,5 @@
+import { FrameBlockSpec } from '@blocksuite/affine-block-frame';
+import { LatexBlockSpec } from '@blocksuite/affine-block-latex';
 import {
   EdgelessSurfaceBlockSpec,
   PageSurfaceBlockSpec,
@@ -18,8 +20,6 @@ import {
 import { literal } from 'lit/static-html.js';
 
 import { EdgelessTextBlockSpec } from '../../edgeless-text-block/index.js';
-import { FrameBlockSpec } from '../../frame-block/frame-spec.js';
-import { LatexBlockSpec } from '../../latex-block/latex-spec.js';
 import { PreviewEdgelessRootBlockSpec } from '../../root-block/edgeless/edgeless-root-spec.js';
 import { PageRootService } from '../../root-block/page/page-root-service.js';
 import {

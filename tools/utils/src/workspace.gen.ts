@@ -14,6 +14,34 @@ export const PackageList = [
     ],
   },
   {
+    location: 'blocksuite/affine/block-attachment',
+    name: '@blocksuite/affine-block-attachment',
+    workspaceDependencies: [
+      'blocksuite/affine/block-embed',
+      'blocksuite/affine/components',
+      'blocksuite/affine/model',
+      'blocksuite/affine/shared',
+      'blocksuite/framework/block-std',
+      'blocksuite/framework/global',
+      'blocksuite/framework/inline',
+      'blocksuite/framework/store',
+    ],
+  },
+  {
+    location: 'blocksuite/affine/block-bookmark',
+    name: '@blocksuite/affine-block-bookmark',
+    workspaceDependencies: [
+      'blocksuite/affine/block-embed',
+      'blocksuite/affine/components',
+      'blocksuite/affine/model',
+      'blocksuite/affine/shared',
+      'blocksuite/framework/block-std',
+      'blocksuite/framework/global',
+      'blocksuite/framework/inline',
+      'blocksuite/framework/store',
+    ],
+  },
+  {
     location: 'blocksuite/affine/block-embed',
     name: '@blocksuite/affine-block-embed',
     workspaceDependencies: [
@@ -28,9 +56,63 @@ export const PackageList = [
     ],
   },
   {
+    location: 'blocksuite/affine/block-frame',
+    name: '@blocksuite/affine-block-frame',
+    workspaceDependencies: [
+      'blocksuite/affine/components',
+      'blocksuite/affine/model',
+      'blocksuite/affine/shared',
+      'blocksuite/framework/block-std',
+      'blocksuite/framework/global',
+      'blocksuite/framework/inline',
+      'blocksuite/framework/store',
+    ],
+  },
+  {
+    location: 'blocksuite/affine/block-image',
+    name: '@blocksuite/affine-block-image',
+    workspaceDependencies: [
+      'blocksuite/affine/components',
+      'blocksuite/affine/model',
+      'blocksuite/affine/shared',
+      'blocksuite/framework/block-std',
+      'blocksuite/framework/global',
+      'blocksuite/framework/inline',
+      'blocksuite/framework/store',
+    ],
+  },
+  {
+    location: 'blocksuite/affine/block-latex',
+    name: '@blocksuite/affine-block-latex',
+    workspaceDependencies: [
+      'blocksuite/affine/block-note',
+      'blocksuite/affine/components',
+      'blocksuite/affine/model',
+      'blocksuite/affine/shared',
+      'blocksuite/framework/block-std',
+      'blocksuite/framework/global',
+      'blocksuite/framework/inline',
+      'blocksuite/framework/store',
+    ],
+  },
+  {
     location: 'blocksuite/affine/block-list',
     name: '@blocksuite/affine-block-list',
     workspaceDependencies: [
+      'blocksuite/affine/components',
+      'blocksuite/affine/model',
+      'blocksuite/affine/shared',
+      'blocksuite/framework/block-std',
+      'blocksuite/framework/global',
+      'blocksuite/framework/inline',
+      'blocksuite/framework/store',
+    ],
+  },
+  {
+    location: 'blocksuite/affine/block-note',
+    name: '@blocksuite/affine-block-note',
+    workspaceDependencies: [
+      'blocksuite/affine/block-embed',
       'blocksuite/affine/components',
       'blocksuite/affine/model',
       'blocksuite/affine/shared',
@@ -124,8 +206,14 @@ export const PackageList = [
     location: 'blocksuite/blocks',
     name: '@blocksuite/blocks',
     workspaceDependencies: [
+      'blocksuite/affine/block-attachment',
+      'blocksuite/affine/block-bookmark',
       'blocksuite/affine/block-embed',
+      'blocksuite/affine/block-frame',
+      'blocksuite/affine/block-image',
+      'blocksuite/affine/block-latex',
       'blocksuite/affine/block-list',
+      'blocksuite/affine/block-note',
       'blocksuite/affine/block-paragraph',
       'blocksuite/affine/block-surface',
       'blocksuite/affine/components',
@@ -300,6 +388,7 @@ export const PackageList = [
       'packages/frontend/core',
       'packages/frontend/i18n',
       'blocksuite/affine/all',
+      'packages/common/infra',
     ],
   },
   {
@@ -456,8 +545,14 @@ export const PackageList = [
 
 export type PackageName =
   | '@blocksuite/affine'
+  | '@blocksuite/affine-block-attachment'
+  | '@blocksuite/affine-block-bookmark'
   | '@blocksuite/affine-block-embed'
+  | '@blocksuite/affine-block-frame'
+  | '@blocksuite/affine-block-image'
+  | '@blocksuite/affine-block-latex'
   | '@blocksuite/affine-block-list'
+  | '@blocksuite/affine-block-note'
   | '@blocksuite/affine-block-paragraph'
   | '@blocksuite/affine-block-surface'
   | '@blocksuite/affine-components'

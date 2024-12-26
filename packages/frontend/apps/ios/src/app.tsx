@@ -44,12 +44,13 @@ import { useTheme } from 'next-themes';
 import { Suspense, useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
+import { BlocksuiteMenuConfigProvider } from './bs-menu-config';
 import { configureFetchProvider } from './fetch';
 import { ModalConfigProvider } from './modal-config';
 import { Cookie } from './plugins/cookie';
 import { Hashcash } from './plugins/hashcash';
 import { Intelligents } from './plugins/intelligents';
-import { NavigationGesture } from './plugins/navigation-gesture';
+import { enableNavigationGesture$ } from './web-navigation-control';
 
 const future = {
   v7_startTransition: true,
@@ -107,9 +108,9 @@ framework.impl(VirtualKeyboardProvider, {
   },
 });
 framework.impl(NavigationGestureProvider, {
-  isEnabled: () => NavigationGesture.isEnabled(),
-  enable: () => NavigationGesture.enable(),
-  disable: () => NavigationGesture.disable(),
+  isEnabled: () => enableNavigationGesture$.value,
+  enable: () => enableNavigationGesture$.next(true),
+  disable: () => enableNavigationGesture$.next(false),
 });
 framework.impl(HapticProvider, {
   impact: options => Haptics.impact(options as any),
@@ -259,11 +260,13 @@ export function App() {
           <AffineContext store={getCurrentStore()}>
             <KeyboardThemeProvider />
             <ModalConfigProvider>
-              <RouterProvider
-                fallbackElement={<AppFallback />}
-                router={router}
-                future={future}
-              />
+              <BlocksuiteMenuConfigProvider>
+                <RouterProvider
+                  fallbackElement={<AppFallback />}
+                  router={router}
+                  future={future}
+                />
+              </BlocksuiteMenuConfigProvider>
             </ModalConfigProvider>
           </AffineContext>
         </I18nProvider>

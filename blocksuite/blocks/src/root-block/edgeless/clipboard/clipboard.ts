@@ -1,3 +1,5 @@
+import { addAttachments } from '@blocksuite/affine-block-attachment';
+import { addImages } from '@blocksuite/affine-block-image';
 import {
   CanvasElementType,
   SurfaceGroupLikeModel,
@@ -11,6 +13,11 @@ import {
   MAX_IMAGE_WIDTH,
   ReferenceInfoSchema,
 } from '@blocksuite/affine-model';
+import {
+  CANVAS_EXPORT_IGNORE_TAGS,
+  EMBED_CARD_HEIGHT,
+  EMBED_CARD_WIDTH,
+} from '@blocksuite/affine-shared/consts';
 import {
   EmbedOptionProvider,
   ParseDocUrlProvider,
@@ -55,11 +62,6 @@ import {
 } from '@blocksuite/store';
 import DOMPurify from 'dompurify';
 
-import {
-  CANVAS_EXPORT_IGNORE_TAGS,
-  EMBED_CARD_HEIGHT,
-  EMBED_CARD_WIDTH,
-} from '../../../_common/consts.js';
 import { ExportManager } from '../../../_common/export-manager/export-manager.js';
 import { getRootByEditorHost } from '../../../_common/utils/query.js';
 import { ClipboardAdapter } from '../../clipboard/adapter.js';
@@ -75,7 +77,6 @@ import {
   getSortedCloneElements,
   serializeElement,
 } from '../utils/clone-utils.js';
-import { addAttachments, addImages } from '../utils/common.js';
 import { deleteElements } from '../utils/crud.js';
 import {
   isAttachmentBlock,

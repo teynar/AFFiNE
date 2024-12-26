@@ -32,10 +32,28 @@
       "path": "../affine/block-paragraph"
     },
     {
+      "path": "../affine/block-latex"
+    },
+    {
       "path": "../affine/block-list"
     },
     {
       "path": "../affine/block-embed"
+    },
+    {
+      "path": "../affine/block-frame"
+    },
+    {
+      "path": "../affine/block-note"
+    },
+    {
+      "path": "../affine/block-bookmark"
+    },
+    {
+      "path": "../affine/block-attachment"
+    },
+    {
+      "path": "../affine/block-image"
     },
     {
       "path": "../affine/data-view"

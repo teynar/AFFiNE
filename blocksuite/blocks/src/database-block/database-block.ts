@@ -1,3 +1,4 @@
+import type { NoteBlockComponent } from '@blocksuite/affine-block-note';
 import { CaptionedBlockComponent } from '@blocksuite/affine-components/caption';
 import {
   menu,
@@ -44,7 +45,6 @@ import { autoUpdate } from '@floating-ui/dom';
 import { computed, signal } from '@preact/signals-core';
 import { css, html, nothing, unsafeCSS } from 'lit';
 
-import type { NoteBlockComponent } from '../note-block/index.js';
 import { EdgelessRootBlockComponent } from '../root-block/index.js';
 import { getDropResult } from '../root-block/widgets/drag-handle/utils.js';
 import { popSideDetail } from './components/layout.js';
@@ -379,9 +379,6 @@ export class DatabaseBlockComponent extends CaptionedBlockComponent<
   }
 
   listenFullWidthChange() {
-    if (!this.doc.awarenessStore.getFlag('enable_database_full_width')) {
-      return;
-    }
     if (this.std.get(DocModeProvider).getEditorMode() === 'edgeless') {
       return;
     }

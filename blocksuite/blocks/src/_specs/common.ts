@@ -1,22 +1,22 @@
+import { AttachmentBlockSpec } from '@blocksuite/affine-block-attachment';
+import { BookmarkBlockSpec } from '@blocksuite/affine-block-bookmark';
 import { EmbedExtensions } from '@blocksuite/affine-block-embed';
+import { ImageBlockSpec } from '@blocksuite/affine-block-image';
 import { ListBlockSpec } from '@blocksuite/affine-block-list';
+import {
+  EdgelessNoteBlockSpec,
+  NoteBlockSpec,
+} from '@blocksuite/affine-block-note';
 import { ParagraphBlockSpec } from '@blocksuite/affine-block-paragraph';
 import { RichTextExtensions } from '@blocksuite/affine-components/rich-text';
 import { EditPropsStore } from '@blocksuite/affine-shared/services';
 import type { ExtensionType } from '@blocksuite/block-std';
 
 import { AdapterFactoryExtensions } from '../_common/adapters/extension.js';
-import { AttachmentBlockSpec } from '../attachment-block/attachment-spec.js';
-import { BookmarkBlockSpec } from '../bookmark-block/bookmark-spec.js';
 import { CodeBlockSpec } from '../code-block/code-block-spec.js';
 import { DataViewBlockSpec } from '../data-view-block/data-view-spec.js';
 import { DatabaseBlockSpec } from '../database-block/database-spec.js';
 import { DividerBlockSpec } from '../divider-block/divider-spec.js';
-import { ImageBlockSpec } from '../image-block/image-spec.js';
-import {
-  EdgelessNoteBlockSpec,
-  NoteBlockSpec,
-} from '../note-block/note-spec.js';
 
 export const CommonFirstPartyBlockSpecs: ExtensionType[] = [
   RichTextExtensions,

@@ -1,5 +1,11 @@
+import { effects as blockAttachmentEffects } from '@blocksuite/affine-block-attachment/effects';
+import { effects as blockBookmarkEffects } from '@blocksuite/affine-block-bookmark/effects';
 import { effects as blockEmbedEffects } from '@blocksuite/affine-block-embed/effects';
+import { effects as blockFrameEffects } from '@blocksuite/affine-block-frame/effects';
+import { effects as blockImageEffects } from '@blocksuite/affine-block-image/effects';
+import { effects as blockLatexEffects } from '@blocksuite/affine-block-latex/effects';
 import { effects as blockListEffects } from '@blocksuite/affine-block-list/effects';
+import { effects as blockNoteEffects } from '@blocksuite/affine-block-note/effects';
 import { effects as blockParagraphEffects } from '@blocksuite/affine-block-paragraph/effects';
 import { effects as blockSurfaceEffects } from '@blocksuite/affine-block-surface/effects';
 import { effects as componentAiItemEffects } from '@blocksuite/affine-components/ai-item';
@@ -24,24 +30,10 @@ import { effects as dataViewEffects } from '@blocksuite/data-view/effects';
 import { effects as inlineEffects } from '@blocksuite/inline/effects';
 import type { BlockModel } from '@blocksuite/store';
 
-import { EmbedCardMoreMenu } from './_common/components/embed-card/embed-card-more-menu-popper.js';
-import { EmbedCardStyleMenu } from './_common/components/embed-card/embed-card-style-popper.js';
 import { EmbedCardEditCaptionEditModal } from './_common/components/embed-card/modal/embed-card-caption-edit-modal.js';
 import { EmbedCardCreateModal } from './_common/components/embed-card/modal/embed-card-create-modal.js';
 import { EmbedCardEditModal } from './_common/components/embed-card/modal/embed-card-edit-modal.js';
 import { registerSpecs } from './_specs/register-specs.js';
-import { AttachmentEdgelessBlockComponent } from './attachment-block/attachment-edgeless-block.js';
-import {
-  AttachmentBlockComponent,
-  type AttachmentBlockService,
-} from './attachment-block/index.js';
-import { BookmarkEdgelessBlockComponent } from './bookmark-block/bookmark-edgeless-block.js';
-import type { insertBookmarkCommand } from './bookmark-block/commands/insert-bookmark.js';
-import { BookmarkCard } from './bookmark-block/components/bookmark-card.js';
-import {
-  BookmarkBlockComponent,
-  type BookmarkBlockService,
-} from './bookmark-block/index.js';
 import { AffineCodeUnit } from './code-block/highlight/affine-code-unit.js';
 import {
   CodeBlockComponent,
@@ -74,34 +66,6 @@ import {
 import { DividerBlockComponent } from './divider-block/index.js';
 import type { insertEdgelessTextCommand } from './edgeless-text-block/commands/insert-edgeless-text.js';
 import { EdgelessTextBlockComponent } from './edgeless-text-block/index.js';
-import { FrameBlockComponent } from './frame-block/index.js';
-import { ImageBlockFallbackCard } from './image-block/components/image-block-fallback.js';
-import { ImageBlockPageComponent } from './image-block/components/page-image-block.js';
-import { effects as blockImageEffects } from './image-block/effects.js';
-import {
-  ImageBlockComponent,
-  type ImageBlockService,
-  ImageEdgelessBlockComponent,
-} from './image-block/index.js';
-import { effects as blockLatexEffects } from './latex-block/effects.js';
-import { LatexBlockComponent } from './latex-block/index.js';
-import type { updateBlockType } from './note-block/commands/block-type.js';
-import type { dedentBlock } from './note-block/commands/dedent-block.js';
-import type { dedentBlockToRoot } from './note-block/commands/dedent-block-to-root.js';
-import type { dedentBlocks } from './note-block/commands/dedent-blocks.js';
-import type { dedentBlocksToRoot } from './note-block/commands/dedent-blocks-to-root.js';
-import type { focusBlockEnd } from './note-block/commands/focus-block-end.js';
-import type { focusBlockStart } from './note-block/commands/focus-block-start.js';
-import type { indentBlock } from './note-block/commands/indent-block.js';
-import type { indentBlocks } from './note-block/commands/indent-blocks.js';
-import type { selectBlock } from './note-block/commands/select-block.js';
-import type { selectBlocksBetween } from './note-block/commands/select-blocks-between.js';
-import {
-  EdgelessNoteBlockComponent,
-  EdgelessNoteMask,
-  NoteBlockComponent,
-  type NoteBlockService,
-} from './note-block/index.js';
 import { EdgelessAutoCompletePanel } from './root-block/edgeless/components/auto-complete/auto-complete-panel.js';
 import { EdgelessAutoComplete } from './root-block/edgeless/components/auto-complete/edgeless-auto-complete.js';
 import { EdgelessToolIconButton } from './root-block/edgeless/components/buttons/tool-icon-button.js';
@@ -273,7 +237,6 @@ import { effects as blockSurfaceRefEffects } from './surface-ref-block/effects.j
 import {
   EdgelessSurfaceRefBlockComponent,
   SurfaceRefBlockComponent,
-  type SurfaceRefBlockService,
 } from './surface-ref-block/index.js';
 import { SurfaceRefGenericBlockPortal } from './surface-ref-block/portal/generic-block.js';
 import { SurfaceRefNotePortal } from './surface-ref-block/portal/note.js';
@@ -284,6 +247,10 @@ export function effects() {
   stdEffects();
   inlineEffects();
 
+  blockNoteEffects();
+  blockAttachmentEffects();
+  blockBookmarkEffects();
+  blockFrameEffects();
   blockListEffects();
   blockParagraphEffects();
   blockEmbedEffects();
@@ -312,16 +279,9 @@ export function effects() {
   widgetCodeToolbarEffects();
 
   customElements.define('affine-database-title', DatabaseTitle);
-  customElements.define(
-    'affine-edgeless-bookmark',
-    BookmarkEdgelessBlockComponent
-  );
-  customElements.define('affine-image', ImageBlockComponent);
   customElements.define('data-view-header-area-icon', IconCell);
   customElements.define('affine-database-link-cell', LinkCell);
   customElements.define('affine-database-link-cell-editing', LinkCellEditing);
-  customElements.define('affine-bookmark', BookmarkBlockComponent);
-  customElements.define('affine-edgeless-image', ImageEdgelessBlockComponent);
   customElements.define('data-view-header-area-text', HeaderAreaTextCell);
   customElements.define(
     'data-view-header-area-text-editing',
@@ -335,23 +295,12 @@ export function effects() {
   );
   customElements.define('affine-edgeless-text', EdgelessTextBlockComponent);
   customElements.define('center-peek', CenterPeek);
-  customElements.define(
-    'affine-edgeless-attachment',
-    AttachmentEdgelessBlockComponent
-  );
   customElements.define('database-datasource-note-renderer', NoteRenderer);
   customElements.define('database-datasource-block-renderer', BlockRenderer);
-  customElements.define('affine-attachment', AttachmentBlockComponent);
-  customElements.define('affine-latex', LatexBlockComponent);
   customElements.define('affine-page-root', PageRootBlockComponent);
-  customElements.define('edgeless-note-mask', EdgelessNoteMask);
-  customElements.define('affine-edgeless-note', EdgelessNoteBlockComponent);
   customElements.define('affine-preview-root', PreviewRootBlockComponent);
-  customElements.define('affine-page-image', ImageBlockPageComponent);
   customElements.define('affine-code', CodeBlockComponent);
-  customElements.define('affine-image-fallback-card', ImageBlockFallbackCard);
   customElements.define('mini-mindmap-preview', MiniMindmapPreview);
-  customElements.define('affine-frame', FrameBlockComponent);
   customElements.define('mini-mindmap-surface-block', MindmapSurfaceBlock);
   customElements.define('affine-data-view', DataViewBlockComponent);
   customElements.define('affine-edgeless-root', EdgelessRootBlockComponent);
@@ -429,9 +378,7 @@ export function effects() {
   customElements.define('ai-panel-input', AIPanelInput);
   customElements.define('ai-panel-generating', AIPanelGenerating);
   customElements.define('edgeless-link-tool-button', EdgelessLinkToolButton);
-  customElements.define('embed-card-more-menu', EmbedCardMoreMenu);
   customElements.define('edgeless-mindmap-menu', EdgelessMindmapMenu);
-  customElements.define('embed-card-style-menu', EmbedCardStyleMenu);
   customElements.define('edgeless-lasso-tool-button', EdgelessLassoToolButton);
   customElements.define('affine-filterable-list', FilterableListComponent);
   customElements.define('ai-panel-error', AIPanelError);
@@ -479,7 +426,6 @@ export function effects() {
   customElements.define('edgeless-present-button', EdgelessPresentButton);
   customElements.define('edgeless-color-picker', EdgelessColorPicker);
   customElements.define('overlay-scrollbar', OverlayScrollbar);
-  customElements.define('affine-note', NoteBlockComponent);
   customElements.define('affine-template-loading', AffineTemplateLoading);
   customElements.define(
     'edgeless-color-picker-button',
@@ -502,7 +448,6 @@ export function effects() {
   customElements.define('note-display-mode-panel', NoteDisplayModePanel);
   customElements.define('edgeless-toolbar-button', EdgelessToolbarButton);
   customElements.define('frame-preview', FramePreview);
-  customElements.define('bookmark-card', BookmarkCard);
   customElements.define('presentation-toolbar', PresentationToolbar);
   customElements.define('edgeless-shape-menu', EdgelessShapeMenu);
   customElements.define('stroke-style-panel', StrokeStylePanel);
@@ -584,19 +529,7 @@ export function effects() {
 declare global {
   namespace BlockSuite {
     interface Commands {
-      selectBlock: typeof selectBlock;
-      selectBlocksBetween: typeof selectBlocksBetween;
-      focusBlockStart: typeof focusBlockStart;
-      focusBlockEnd: typeof focusBlockEnd;
-      indentBlocks: typeof indentBlocks;
-      dedentBlock: typeof dedentBlock;
-      dedentBlocksToRoot: typeof dedentBlocksToRoot;
-      dedentBlocks: typeof dedentBlocks;
-      indentBlock: typeof indentBlock;
-      insertBookmark: typeof insertBookmarkCommand;
-      updateBlockType: typeof updateBlockType;
       insertEdgelessText: typeof insertEdgelessTextCommand;
-      dedentBlockToRoot: typeof dedentBlockToRoot;
     }
     interface CommandContext {
       focusBlock?: BlockComponent | null;
@@ -609,13 +542,8 @@ declare global {
       'affine:page': RootBlockConfig;
     }
     interface BlockServices {
-      'affine:note': NoteBlockService;
       'affine:page': RootService;
-      'affine:attachment': AttachmentBlockService;
-      'affine:bookmark': BookmarkBlockService;
       'affine:database': DatabaseBlockService;
-      'affine:image': ImageBlockService;
-      'affine:surface-ref': SurfaceRefBlockService;
     }
   }
 }

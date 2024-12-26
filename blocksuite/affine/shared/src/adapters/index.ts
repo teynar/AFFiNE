@@ -3,12 +3,17 @@ export {
   type BlockHtmlAdapterMatcher,
   BlockHtmlAdapterMatcherIdentifier,
   type Html,
+  HtmlAdapter,
+  HtmlAdapterFactoryExtension,
+  HtmlAdapterFactoryIdentifier,
+  HtmlASTToDeltaExtension,
   type HtmlASTToDeltaMatcher,
   HtmlASTToDeltaMatcherIdentifier,
   HtmlDeltaConverter,
+  InlineDeltaToHtmlAdapterExtension,
   type InlineDeltaToHtmlAdapterMatcher,
   InlineDeltaToHtmlAdapterMatcherIdentifier,
-} from './html-adapter/index.js';
+} from './html';
 export {
   BlockMarkdownAdapterExtension,
   type BlockMarkdownAdapterMatcher,
@@ -21,33 +26,40 @@ export {
   type MarkdownASTToDeltaMatcher,
   MarkdownASTToDeltaMatcherIdentifier,
   MarkdownDeltaConverter,
-} from './markdown/index.js';
+} from './markdown';
 export {
   BlockNotionHtmlAdapterExtension,
   type BlockNotionHtmlAdapterMatcher,
   BlockNotionHtmlAdapterMatcherIdentifier,
   type InlineDeltaToNotionHtmlAdapterMatcher,
   type NotionHtml,
+  NotionHtmlASTToDeltaExtension,
   type NotionHtmlASTToDeltaMatcher,
   NotionHtmlASTToDeltaMatcherIdentifier,
   NotionHtmlDeltaConverter,
-} from './notion-html/index.js';
+} from './notion-html';
 export {
   BlockPlainTextAdapterExtension,
   type BlockPlainTextAdapterMatcher,
   BlockPlainTextAdapterMatcherIdentifier,
+  InlineDeltaToPlainTextAdapterExtension,
   type InlineDeltaToPlainTextAdapterMatcher,
   InlineDeltaToPlainTextAdapterMatcherIdentifier,
   type PlainText,
+  PlainTextAdapter,
+  PlainTextAdapterFactoryExtension,
+  PlainTextAdapterFactoryIdentifier,
   PlainTextDeltaConverter,
-} from './plain-text/index.js';
+} from './plain-text';
 export {
   type AdapterContext,
+  type AdapterFactory,
+  AdapterFactoryIdentifier,
   type BlockAdapterMatcher,
   DeltaASTConverter,
   type HtmlAST,
   type InlineHtmlAST,
   isBlockSnapshotNode,
   type TextBuffer,
-} from './types/index.js';
-export * from './utils/index.js';
+} from './types';
+export * from './utils';

@@ -16,17 +16,11 @@ export * from './_common/test-utils/test-utils.js';
 export * from './_common/transformers/index.js';
 export { type AbstractEditor } from './_common/types.js';
 export * from './_specs/index.js';
-export * from './attachment-block/index.js';
-export * from './bookmark-block/index.js';
 export * from './code-block/index.js';
 export * from './data-view-block/index.js';
 export * from './database-block/index.js';
 export * from './divider-block/index.js';
 export * from './edgeless-text-block/index.js';
-export * from './frame-block/index.js';
-export * from './image-block/index.js';
-export * from './latex-block/index.js';
-export * from './note-block/index.js';
 export { EdgelessTemplatePanel } from './root-block/edgeless/components/toolbar/template/template-panel.js';
 export type {
   Template,
@@ -50,8 +44,14 @@ export {
   MiniMindmapPreview,
 } from './surface-block/mini-mindmap/index.js';
 export * from './surface-ref-block/index.js';
+export * from '@blocksuite/affine-block-attachment';
+export * from '@blocksuite/affine-block-bookmark';
 export * from '@blocksuite/affine-block-embed';
+export * from '@blocksuite/affine-block-frame';
+export * from '@blocksuite/affine-block-image';
+export * from '@blocksuite/affine-block-latex';
 export * from '@blocksuite/affine-block-list';
+export * from '@blocksuite/affine-block-note';
 export * from '@blocksuite/affine-block-paragraph';
 export * from '@blocksuite/affine-block-surface';
 export {
@@ -90,6 +90,7 @@ export {
   type AdvancedMenuItem,
   type FatMenuItems,
   groupsToActions,
+  MenuContext,
   type MenuItem,
   type MenuItemGroup,
   renderActions,
@@ -98,6 +99,14 @@ export {
   Tooltip,
 } from '@blocksuite/affine-components/toolbar';
 export * from '@blocksuite/affine-model';
+export {
+  HtmlAdapter,
+  HtmlAdapterFactoryExtension,
+  HtmlAdapterFactoryIdentifier,
+  PlainTextAdapter,
+  PlainTextAdapterFactoryExtension,
+  PlainTextAdapterFactoryIdentifier,
+} from '@blocksuite/affine-shared/adapters';
 export * from '@blocksuite/affine-shared/services';
 export { scrollbarStyle } from '@blocksuite/affine-shared/styles';
 export {

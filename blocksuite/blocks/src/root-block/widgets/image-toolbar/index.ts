@@ -1,17 +1,19 @@
+import type { ImageBlockComponent } from '@blocksuite/affine-block-image';
 import { HoverController } from '@blocksuite/affine-components/hover';
 import type {
   AdvancedMenuItem,
   MenuItemGroup,
 } from '@blocksuite/affine-components/toolbar';
-import { cloneGroups } from '@blocksuite/affine-components/toolbar';
+import {
+  cloneGroups,
+  getMoreMenuConfig,
+} from '@blocksuite/affine-components/toolbar';
 import type { ImageBlockModel } from '@blocksuite/affine-model';
+import { PAGE_HEADER_HEIGHT } from '@blocksuite/affine-shared/consts';
 import { WidgetComponent } from '@blocksuite/block-std';
 import { limitShift, shift } from '@floating-ui/dom';
 import { html } from 'lit';
 
-import { PAGE_HEADER_HEIGHT } from '../../../_common/consts.js';
-import type { ImageBlockComponent } from '../../../image-block/image-block.js';
-import { getMoreMenuConfig } from '../../configs/toolbar.js';
 import { MORE_GROUPS, PRIMARY_GROUPS } from './config.js';
 import { ImageToolbarContext } from './context.js';
 
