@@ -36,7 +36,6 @@ extension ChatTableView: UIScrollViewDelegate, DisplayLinkDelegate {
     }
     scrollAnimationContext.setTarget(bottomLocationY)
     scrollAnimationContext.update(withDeltaTime: deltaTime)
-    print("[*] moving from \(tableView.contentOffset.y) to \(scrollAnimationContext.context.targetPos)")
     tableView.contentOffset.y = scrollAnimationContext.value
   }
 

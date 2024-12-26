@@ -136,8 +136,8 @@ public class IntelligentsChatController: UIViewController {
     ].forEach { $0.isActive = true }
     progressView.style = .large
   }
-  
-  public override func viewDidAppear(_ animated: Bool) {
+
+  override public func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     tableView.scrollToBottomEnabled = true
     tableView.scrollToBottomAllowed = true

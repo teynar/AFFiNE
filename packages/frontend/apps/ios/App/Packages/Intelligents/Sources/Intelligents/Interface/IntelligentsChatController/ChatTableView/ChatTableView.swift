@@ -79,7 +79,7 @@ class ChatTableView: UIView {
   required init?(coder _: NSCoder) {
     fatalError()
   }
-  
+
   func reloadData() {
     tableView.reloadData()
   }

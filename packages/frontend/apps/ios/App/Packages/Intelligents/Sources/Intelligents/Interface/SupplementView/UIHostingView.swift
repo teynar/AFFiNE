@@ -16,13 +16,20 @@ class UIHostingView<Content: View>: UIView {
     set { hostingViewController.rootView = newValue }
   }
 
+  override var intrinsicContentSize: CGSize {
+    hostingViewController.view.intrinsicContentSize
+  }
+
   init(rootView: Content) {
     hostingViewController = UIHostingController(rootView: rootView)
+    hostingViewController.edgesForExtendedLayout = []
+    hostingViewController.extendedLayoutIncludesOpaqueBars = false
     super.init(frame: .zero)
 
     hostingViewController.view?.translatesAutoresizingMaskIntoConstraints = false
     addSubview(hostingViewController.view)
     if let view = hostingViewController.view {
+      view.removeFromSuperview()
       view.backgroundColor = .clear
       view.isOpaque = false
       addSubview(view)
