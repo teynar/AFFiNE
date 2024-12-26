@@ -15,7 +15,9 @@ public class IntelligentsChatController: UIViewController {
   let tableView = ChatTableView()
 
   var inputBoxKeyboardAdapterHeightConstraint = NSLayoutConstraint()
-
+  
+  var sessionID: String = ""
+  
   override public var title: String? {
     set {
       super.title = newValue
@@ -115,40 +117,8 @@ public class IntelligentsChatController: UIViewController {
     view.bringSubviewToFront(inputBox)
     inputBox.editor.controlBanner.sendButton.addTarget(
       self,
-      action: #selector(send),
+      action: #selector(chat_onSend),
       for: .touchUpInside
     )
-  }
-
-  @objc func send() {
-    assert(Thread.isMainThread)
-    inputBox.isUserInteractionEnabled = false
-    progressView.startAnimating()
-    progressView.isHidden = false
-    progressView.alpha = 0
-    UIView.animate(withDuration: 0.3) {
-      self.inputBox.editor.alpha = 0
-      self.progressView.alpha = 1
-    } completion: { _ in
-      let viewModel = self.inputBox.editor.viewModel.duplicate()
-      self.inputBox.editor.viewModel.reset()
-      DispatchQueue.global().async {
-        self.sendSyncEx(viewModel: viewModel)
-        DispatchQueue.main.async {
-          UIView.animate(withDuration: 0.3) {
-            self.inputBox.editor.alpha = 1
-            self.progressView.alpha = 0
-          } completion: { _ in
-            self.inputBox.isUserInteractionEnabled = true
-            self.progressView.stopAnimating()
-          }
-        }
-      }
-    }
-  }
-
-  private func sendSyncEx(viewModel: InputEditView.ViewModel) {
-    let text = viewModel.text
-    let images = viewModel.attachments
   }
 }

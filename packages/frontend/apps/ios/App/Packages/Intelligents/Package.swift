@@ -18,6 +18,7 @@ let package = Package(
     .package(url: "https://github.com/Lakr233/SpringInterpolation", from: "1.1.0"),
     .package(url: "https://github.com/Lakr233/MSDisplayLink", from: "1.1.0"),
     .package(path: "../AffineGraphQL"),
+    .package(url: "https://github.com/apollographql/apollo-ios.git", from: "1.0.0"),
   ],
   targets: [
     .target(name: "Intelligents", dependencies: [
@@ -25,6 +26,7 @@ let package = Package(
       "SpringInterpolation",
       "MSDisplayLink",
       .product(name: "MarkdownUI", package: "swift-markdown-ui"),
+      .product(name: "Apollo", package: "apollo-ios"),
     ]),
   ]
 )
