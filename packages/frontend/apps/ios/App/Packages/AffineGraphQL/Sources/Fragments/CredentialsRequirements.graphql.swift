@@ -3,9 +3,9 @@
 
 @_exported import ApolloAPI
 
-public struct CredentialsRequirement: AffineGraphQL.SelectionSet, Fragment {
+public struct CredentialsRequirements: AffineGraphQL.SelectionSet, Fragment {
   public static var fragmentDefinition: StaticString {
-    #"fragment CredentialsRequirement on CredentialsRequirementType { __typename password { __typename ...PasswordLimits } }"#
+    #"fragment CredentialsRequirements on CredentialsRequirementType { __typename password { __typename ...PasswordLimits } }"#
   }
 
   public let __data: DataDict

@@ -7,8 +7,8 @@ public class ServerConfigQuery: GraphQLQuery {
   public static let operationName: String = "serverConfig"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query serverConfig { serverConfig { __typename version baseUrl name features type initialized credentialsRequirement { __typename ...CredentialsRequirement } } }"#,
-      fragments: [CredentialsRequirement.self, PasswordLimits.self]
+      #"query serverConfig { serverConfig { __typename version baseUrl name features type initialized credentialsRequirement { __typename ...CredentialsRequirements } } }"#,
+      fragments: [CredentialsRequirements.self, PasswordLimits.self]
     ))
 
   public init() {}
@@ -69,7 +69,7 @@ public class ServerConfigQuery: GraphQLQuery {
         public static var __parentType: any ApolloAPI.ParentType { AffineGraphQL.Objects.CredentialsRequirementType }
         public static var __selections: [ApolloAPI.Selection] { [
           .field("__typename", String.self),
-          .fragment(CredentialsRequirement.self),
+          .fragment(CredentialsRequirements.self),
         ] }
 
         public var password: Password { __data["password"] }
@@ -78,10 +78,10 @@ public class ServerConfigQuery: GraphQLQuery {
           public let __data: DataDict
           public init(_dataDict: DataDict) { __data = _dataDict }
 
-          public var credentialsRequirement: CredentialsRequirement { _toFragment() }
+          public var credentialsRequirements: CredentialsRequirements { _toFragment() }
         }
 
-        public typealias Password = CredentialsRequirement.Password
+        public typealias Password = CredentialsRequirements.Password
       }
     }
   }
