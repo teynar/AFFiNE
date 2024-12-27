@@ -2,7 +2,7 @@ import { Avatar, ConfirmModal, Input, Switch } from '@affine/component';
 import type { ConfirmModalProps } from '@affine/component/ui/modal';
 import { CloudSvg } from '@affine/core/components/affine/share-page-modal/cloud-svg';
 import { useAsyncCallback } from '@affine/core/components/hooks/affine-async-hooks';
-import { AuthService } from '@affine/core/modules/cloud';
+import { AuthService, ServersService } from '@affine/core/modules/cloud';
 import {
   type DialogComponentProps,
   type GLOBAL_DIALOG_SCHEMA,
@@ -12,8 +12,8 @@ import { FeatureFlagService } from '@affine/core/modules/feature-flag';
 import { WorkspacesService } from '@affine/core/modules/workspace';
 import { useI18n } from '@affine/i18n';
 import { track } from '@affine/track';
-import { useLiveData, useService } from '@toeverything/infra';
-import { useCallback, useState } from 'react';
+import { FrameworkScope, useLiveData, useService } from '@toeverything/infra';
+import { useCallback, useEffect, useState } from 'react';
 
 import { buildShowcaseWorkspace } from '../../../utils/first-app-data';
 import * as styles from './dialog.css';
@@ -60,8 +60,18 @@ const NameWorkspaceContent = ({
   );
 
   const handleCreateWorkspace = useCallback(() => {
+    if (loginStatus !== 'authenticated') {
+      return openSignInModal();
+    }
     onConfirmName(workspaceName, enable ? serverId || 'affine-cloud' : 'local');
-  }, [enable, onConfirmName, serverId, workspaceName]);
+  }, [
+    enable,
+    loginStatus,
+    onConfirmName,
+    openSignInModal,
+    serverId,
+    workspaceName,
+  ]);
 
   const onEnter = useCallback(() => {
     if (workspaceName) {
@@ -150,9 +160,13 @@ export const CreateWorkspaceDialog = ({
   close,
 }: DialogComponentProps<GLOBAL_DIALOG_SCHEMA['create-workspace']>) => {
   const workspacesService = useService(WorkspacesService);
+  const serversService = useService(ServersService);
   const featureFlagService = useService(FeatureFlagService);
   const enableLocalWorkspace = useLiveData(
     featureFlagService.flags.enable_local_workspace.$
+  );
+  const server = useLiveData(
+    serverId ? serversService.server$(serverId) : null
   );
   const [loading, setLoading] = useState(false);
 
@@ -186,13 +200,14 @@ export const CreateWorkspaceDialog = ({
   );
 
   return (
-    <NameWorkspaceContent
-      loading={loading}
-      open
-      serverId={serverId}
-      forcedCloud={forcedCloud || !enableLocalWorkspace}
-      onOpenChange={onOpenChange}
-      onConfirmName={onConfirmName}
-    />
+    <FrameworkScope scope={server?.scope}>
+      <NameWorkspaceContent
+        loading={loading}
+        open
+        forcedCloud={forcedCloud || !enableLocalWorkspace}
+        onOpenChange={onOpenChange}
+        onConfirmName={onConfirmName}
+      />
+    </FrameworkScope>
   );
 };
