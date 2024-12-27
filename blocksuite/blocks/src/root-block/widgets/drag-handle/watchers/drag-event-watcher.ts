@@ -132,7 +132,6 @@ export class DragEventWatcher {
 
     this.widget.rafID = requestAnimationFrame(() => {
       this.widget.edgelessWatcher.updateDragPreviewPosition(state);
-      this.widget.updateDropIndicator(state, true);
     });
     return true;
   };

@@ -7,13 +7,15 @@ import {
 } from '@blocksuite/affine-shared/utils';
 import {
   type BlockStdScope,
+  type DndEventState,
   type EditorHost,
   type ExtensionType,
   LifeCycleWatcher,
+  type UIEventHandler,
 } from '@blocksuite/block-std';
 import { createIdentifier } from '@blocksuite/global/di';
 import type { IVec } from '@blocksuite/global/utils';
-import { Point } from '@blocksuite/global/utils';
+import { nextTick, Point } from '@blocksuite/global/utils';
 import type { BlockModel } from '@blocksuite/store';
 
 import type { DragIndicator } from './index.js';
@@ -56,9 +58,9 @@ export class FileDropExtension extends LifeCycleWatcher {
     FileDropExtension.indicator.rect = null;
   };
 
-  onDragMove = (event: DragEvent) => {
-    event.preventDefault();
-
+  private readonly _onDragOver = async (state: DndEventState) => {
+    await nextTick();
+    const event = state.raw;
     const dataTransfer = event.dataTransfer;
     if (!dataTransfer) return;
 
@@ -78,12 +80,15 @@ export class FileDropExtension extends LifeCycleWatcher {
       }
     }
     if (result) {
-      FileDropExtension.dropResult = result;
       FileDropExtension.indicator.rect = result.rect;
     } else {
-      FileDropExtension.dropResult = null;
       FileDropExtension.indicator.rect = null;
     }
+  };
+
+  onDragOver: UIEventHandler = ctx => {
+    const state = ctx.get('dndState');
+    this._onDragOver(state).catch(console.error);
   };
 
   get targetModel(): BlockModel | null {
@@ -183,27 +188,23 @@ export class FileDropExtension extends LifeCycleWatcher {
     super.mounted();
     const std = this.std;
 
-    std.event.disposables.add(
-      std.event.add('nativeDragMove', context => {
-        const event = context.get('dndState');
-        this.onDragMove(event.raw);
-      })
-    );
+    std.event.disposables.add(std.event.add('nativeDragOver', this.onDragOver));
     std.event.disposables.add(
       std.event.add('nativeDragLeave', () => {
         this.onDragLeave();
       })
     );
+
+    const configs = std.provider
+      .getAll(FileDropConfigExtensionIdentifier)
+      .values();
+
     std.event.disposables.add(
       std.event.add('nativeDrop', context => {
-        const values = std.provider
-          .getAll(FileDropConfigExtensionIdentifier)
-          .values();
-
-        for (const value of values) {
-          if (value.onDrop) {
+        for (const config of configs) {
+          if (config.onDrop) {
             const event = context.get('dndState');
-            const drop = this._onDrop(event.raw, value);
+            const drop = this._onDrop(event.raw, config);
             if (drop) {
               return;
             }
