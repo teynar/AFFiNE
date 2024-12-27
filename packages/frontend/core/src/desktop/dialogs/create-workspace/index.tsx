@@ -60,7 +60,7 @@ const NameWorkspaceContent = ({
   );
 
   const handleCreateWorkspace = useCallback(() => {
-    if (loginStatus !== 'authenticated') {
+    if (loginStatus !== 'authenticated' && enable) {
       return openSignInModal();
     }
     onConfirmName(workspaceName, enable ? serverId || 'affine-cloud' : 'local');
