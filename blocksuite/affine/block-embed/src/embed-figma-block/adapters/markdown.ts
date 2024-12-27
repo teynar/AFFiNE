@@ -6,6 +6,5 @@ import { createEmbedBlockMarkdownAdapterMatcher } from '../../common/adapters/ma
 export const embedFigmaBlockMarkdownAdapterMatcher =
   createEmbedBlockMarkdownAdapterMatcher(EmbedFigmaBlockSchema.model.flavour);
 
-export const EmbedFigmaMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  embedFigmaBlockMarkdownAdapterMatcher
-);
+export const EmbedFigmaBlockMarkdownAdapterExtension =
+  BlockMarkdownAdapterExtension(embedFigmaBlockMarkdownAdapterMatcher);

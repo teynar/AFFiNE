@@ -1,10 +1,10 @@
-import type {
-  AttachmentBlockModel,
-  BookmarkBlockModel,
-  EmbedBlockModel,
-  ImageBlockModel,
+import {
+  type AttachmentBlockModel,
+  type BookmarkBlockModel,
+  createDefaultMarkdownAdapterProvider,
+  type EmbedBlockModel,
+  type ImageBlockModel,
 } from '@blocksuite/affine/blocks';
-import { MarkdownAdapter } from '@blocksuite/affine/blocks';
 import {
   createYProxy,
   DocCollection,
@@ -13,6 +13,7 @@ import {
   type JobMiddleware,
   type YBlock,
 } from '@blocksuite/affine/store';
+import { MarkdownAdapter } from '@blocksuite/affine-shared/adapters';
 import type { AffineTextAttributes } from '@blocksuite/affine-shared/types';
 import type { DeltaInsert } from '@blocksuite/inline';
 import { Document } from '@toeverything/infra';
@@ -42,6 +43,9 @@ const LRU_CACHE_SIZE = 5;
 
 // lru cache for ydoc instances, last used at the end of the array
 const lruCache = [] as { doc: YDoc; hash: string }[];
+
+// default markdown provider for markdown adapter
+const defaultMarkdownProvider = createDefaultMarkdownAdapterProvider();
 
 async function digest(data: Uint8Array) {
   if (
@@ -172,7 +176,8 @@ function generateMarkdownPreviewBuilder(
     new Job({
       collection: markdownPreviewDocCollection,
       middlewares: [docLinkBaseURLMiddleware, titleMiddleware],
-    })
+    }),
+    defaultMarkdownProvider
   );
 
   const markdownPreviewCache = new WeakMap<BlockDocumentInfo, string | null>();

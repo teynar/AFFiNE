@@ -2,16 +2,8 @@ import {
   DEFAULT_NOTE_BACKGROUND_COLOR,
   NoteDisplayMode,
 } from '@blocksuite/affine-model';
-import {
-  type AdapterContext,
-  AdapterFactoryIdentifier,
-  type BlockMarkdownAdapterMatcher,
-  BlockMarkdownAdapterMatcherIdentifier,
-  type Markdown,
-  type MarkdownAST,
-  MarkdownDeltaConverter,
-} from '@blocksuite/affine-shared/adapters';
 import type { ExtensionType } from '@blocksuite/block-std';
+import type { ServiceProvider } from '@blocksuite/global/di';
 import {
   type AssetsManager,
   ASTWalker,
@@ -37,10 +29,21 @@ import remarkParse from 'remark-parse';
 import remarkStringify from 'remark-stringify';
 import { unified } from 'unified';
 
-import { defaultBlockMarkdownAdapterMatchers } from './block-matcher.js';
-import { inlineDeltaToMarkdownAdapterMatchers } from './delta-converter/inline-delta.js';
-import { markdownInlineToDeltaMatchers } from './delta-converter/markdown-inline.js';
+import {
+  type AdapterContext,
+  AdapterFactoryIdentifier,
+} from '../types/adapter.js';
+import {
+  type BlockMarkdownAdapterMatcher,
+  BlockMarkdownAdapterMatcherIdentifier,
+} from './block-adapter.js';
+import {
+  InlineDeltaToMarkdownAdapterMatcherIdentifier,
+  MarkdownASTToDeltaMatcherIdentifier,
+  MarkdownDeltaConverter,
+} from './delta-converter.js';
 import { remarkGfm } from './gfm.js';
+import type { Markdown, MarkdownAST } from './type.js';
 
 type MarkdownToSliceSnapshotPayload = {
   file: Markdown;
@@ -167,11 +170,23 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
 
   deltaConverter: MarkdownDeltaConverter;
 
+  readonly blockMatchers: BlockMarkdownAdapterMatcher[];
+
   constructor(
     job: Job,
-    readonly blockMatchers: BlockMarkdownAdapterMatcher[] = defaultBlockMarkdownAdapterMatchers
+    readonly provider: ServiceProvider
   ) {
     super(job);
+    const blockMatchers = Array.from(
+      provider.getAll(BlockMarkdownAdapterMatcherIdentifier).values()
+    );
+    const inlineDeltaToMarkdownAdapterMatchers = Array.from(
+      provider.getAll(InlineDeltaToMarkdownAdapterMatcherIdentifier).values()
+    );
+    const markdownInlineToDeltaMatchers = Array.from(
+      provider.getAll(MarkdownASTToDeltaMatcherIdentifier).values()
+    );
+    this.blockMatchers = blockMatchers;
     this.deltaConverter = new MarkdownDeltaConverter(
       job.adapterConfigs,
       inlineDeltaToMarkdownAdapterMatchers,
@@ -443,13 +458,7 @@ export const MarkdownAdapterFactoryIdentifier =
 export const MarkdownAdapterFactoryExtension: ExtensionType = {
   setup: di => {
     di.addImpl(MarkdownAdapterFactoryIdentifier, provider => ({
-      get: (job: Job) =>
-        new MarkdownAdapter(
-          job,
-          Array.from(
-            provider.getAll(BlockMarkdownAdapterMatcherIdentifier).values()
-          )
-        ),
+      get: (job: Job) => new MarkdownAdapter(job, provider),
     }));
   },
 };

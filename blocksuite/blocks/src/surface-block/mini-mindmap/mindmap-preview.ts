@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { SurfaceBlockModel } from '@blocksuite/affine-block-surface';
 import {
   MindmapStyleFour,
@@ -10,7 +9,9 @@ import {
   type MindmapElementModel,
   MindmapStyle,
 } from '@blocksuite/affine-model';
+import { MarkdownAdapter } from '@blocksuite/affine-shared/adapters';
 import { BlockStdScope, type EditorHost } from '@blocksuite/block-std';
+import type { ServiceProvider } from '@blocksuite/global/di';
 import { WithDisposable } from '@blocksuite/global/utils';
 import {
   type Doc,
@@ -25,7 +26,6 @@ import { property, query } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { MarkdownAdapter } from '../../_common/adapters/markdown/index.js';
 import { MiniMindmapSchema, MiniMindmapSpecs } from './spec.js';
 
 const mindmapStyles = [
@@ -139,15 +139,19 @@ export class MiniMindmapPreview extends WithDisposable(LitElement) {
     this.requestUpdate();
   }
 
-  private _toMindmapNode(answer: string, doc: Doc) {
-    return markdownToMindmap(answer, doc);
+  private _toMindmapNode(answer: string, doc: Doc, provider: ServiceProvider) {
+    return markdownToMindmap(answer, doc, provider);
   }
 
   override connectedCallback(): void {
     super.connectedCallback();
 
     const tempDoc = this._createTemporaryDoc();
-    const mindmapNode = this._toMindmapNode(this.answer, tempDoc.doc);
+    const mindmapNode = this._toMindmapNode(
+      this.answer,
+      tempDoc.doc,
+      this.host.std.provider
+    );
 
     if (!mindmapNode) {
       return;
@@ -240,10 +244,14 @@ type Node = {
   children: Node[];
 };
 
-export const markdownToMindmap = (answer: string, doc: Doc) => {
+export const markdownToMindmap = (
+  answer: string,
+  doc: Doc,
+  provider: ServiceProvider
+) => {
   let result: Node | null = null;
   const job = new Job({ collection: doc.collection });
-  const markdown = new MarkdownAdapter(job);
+  const markdown = new MarkdownAdapter(job, provider);
   const ast = markdown['_markdownToAst'](answer);
   const traverse = (
     markdownNode: Unpacked<(typeof ast)['children']>,

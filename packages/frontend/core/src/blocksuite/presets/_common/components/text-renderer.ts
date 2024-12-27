@@ -192,8 +192,14 @@ export class TextRenderer extends WithDisposable(ShadowlessElement) {
       const latestAnswer = this._answers.pop();
       this._answers = [];
       const schema = this.schema ?? this.host?.std.doc.collection.schema;
-      if (latestAnswer && schema) {
-        markDownToDoc(schema, latestAnswer, this.options.additionalMiddlewares)
+      const provider = this.host?.std.provider;
+      if (latestAnswer && schema && provider) {
+        markDownToDoc(
+          schema,
+          latestAnswer,
+          provider,
+          this.options.additionalMiddlewares
+        )
           .then(doc => {
             this.disposeDoc();
             this._doc = doc.blockCollection.getDoc({

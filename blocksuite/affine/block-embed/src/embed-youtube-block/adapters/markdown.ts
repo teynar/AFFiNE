@@ -6,5 +6,5 @@ import { createEmbedBlockMarkdownAdapterMatcher } from '../../common/adapters/ma
 export const embedYoutubeBlockMarkdownAdapterMatcher =
   createEmbedBlockMarkdownAdapterMatcher(EmbedYoutubeBlockSchema.model.flavour);
 
-export const EmbedYoutubeMarkdownAdapterExtension =
+export const EmbedYoutubeBlockMarkdownAdapterExtension =
   BlockMarkdownAdapterExtension(embedYoutubeBlockMarkdownAdapterMatcher);

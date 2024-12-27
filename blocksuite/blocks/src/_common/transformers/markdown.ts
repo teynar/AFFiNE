@@ -1,9 +1,10 @@
+import { MarkdownAdapter } from '@blocksuite/affine-shared/adapters';
 import { BlockSuiteError, ErrorCode } from '@blocksuite/global/exceptions';
 import { assertExists, sha } from '@blocksuite/global/utils';
 import type { Doc, DocCollection } from '@blocksuite/store';
 import { extMimeMap, Job } from '@blocksuite/store';
 
-import { MarkdownAdapter } from '../adapters/markdown/index.js';
+import { createDefaultMarkdownAdapterProvider } from '../adapters/markdown/helper.js';
 import {
   defaultImageProxyMiddleware,
   docLinkBaseURLMiddleware,
@@ -11,6 +12,8 @@ import {
   titleMiddleware,
 } from './middlewares.js';
 import { createAssetsArchive, download, Unzip } from './utils.js';
+
+const provider = createDefaultMarkdownAdapterProvider();
 
 type ImportMarkdownToBlockOptions = {
   doc: Doc;
@@ -41,7 +44,7 @@ async function exportDoc(doc: Doc) {
   });
   const snapshot = job.docToSnapshot(doc);
 
-  const adapter = new MarkdownAdapter(job);
+  const adapter = new MarkdownAdapter(job, provider);
   if (!snapshot) {
     return;
   }
@@ -89,7 +92,7 @@ async function importMarkdownToBlock({
     collection: doc.collection,
     middlewares: [defaultImageProxyMiddleware, docLinkBaseURLMiddleware],
   });
-  const adapter = new MarkdownAdapter(job);
+  const adapter = new MarkdownAdapter(job, provider);
   const snapshot = await adapter.toSliceSnapshot({
     file: markdown,
     assets: job.assetsManager,
@@ -129,7 +132,7 @@ async function importMarkdownToDoc({
       docLinkBaseURLMiddleware,
     ],
   });
-  const mdAdapter = new MarkdownAdapter(job);
+  const mdAdapter = new MarkdownAdapter(job, provider);
   const page = await mdAdapter.toDoc({
     file: markdown,
     assets: job.assetsManager,
@@ -195,7 +198,7 @@ async function importMarkdownZip({
       for (const [key, value] of pendingPathBlobIdMap.entries()) {
         pathBlobIdMap.set(key, value);
       }
-      const mdAdapter = new MarkdownAdapter(job);
+      const mdAdapter = new MarkdownAdapter(job, provider);
       const markdown = await blob.text();
       const doc = await mdAdapter.toDoc({
         file: markdown,

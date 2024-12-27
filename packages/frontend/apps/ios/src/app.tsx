@@ -30,11 +30,12 @@ import {
 } from '@affine/core/modules/workspace-engine';
 import { I18n } from '@affine/i18n';
 import {
+  createDefaultMarkdownAdapterProvider,
   docLinkBaseURLMiddleware,
-  MarkdownAdapter,
   titleMiddleware,
 } from '@blocksuite/affine/blocks';
 import { Job } from '@blocksuite/affine/store';
+import { MarkdownAdapter } from '@blocksuite/affine-shared/adapters';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { Haptics } from '@capacitor/haptics';
@@ -131,6 +132,8 @@ framework.impl(AIButtonProvider, {
 
 const frameworkProvider = framework.provider();
 
+const defaultMarkdownProvider = createDefaultMarkdownAdapterProvider();
+
 // ------ some apis for native ------
 (window as any).getCurrentServerBaseUrl = () => {
   const globalContextService = frameworkProvider.get(GlobalContextService);
@@ -175,7 +178,7 @@ const frameworkProvider = framework.provider();
     });
     const snapshot = job.docToSnapshot(blockSuiteDoc);
 
-    const adapter = new MarkdownAdapter(job);
+    const adapter = new MarkdownAdapter(job, defaultMarkdownProvider);
     if (!snapshot) {
       return;
     }

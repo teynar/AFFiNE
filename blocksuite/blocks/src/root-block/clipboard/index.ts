@@ -2,13 +2,13 @@ import {
   AttachmentAdapter,
   HtmlAdapter,
   ImageAdapter,
+  MixTextAdapter,
   NotionTextAdapter,
 } from '@blocksuite/affine-shared/adapters';
 import type { BlockComponent, UIEventHandler } from '@blocksuite/block-std';
 import { DisposableGroup } from '@blocksuite/global/utils';
 import type { BlockSnapshot, Doc } from '@blocksuite/store';
 
-import { MixTextAdapter } from '../../_common/adapters/index.js';
 import {
   defaultImageProxyMiddleware,
   replaceIdMiddleware,

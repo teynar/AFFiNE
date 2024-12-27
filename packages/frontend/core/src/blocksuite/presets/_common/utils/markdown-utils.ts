@@ -6,14 +6,17 @@ import type {
 import {
   defaultImageProxyMiddleware,
   embedSyncedDocMiddleware,
-  MarkdownAdapter,
-  MixTextAdapter,
   pasteMiddleware,
   PlainTextAdapter,
   titleMiddleware,
 } from '@blocksuite/affine/blocks';
 import type { JobMiddleware, Schema } from '@blocksuite/affine/store';
 import { DocCollection, Job } from '@blocksuite/affine/store';
+import {
+  MarkdownAdapter,
+  MixTextAdapter,
+} from '@blocksuite/affine-shared/adapters';
+import type { ServiceProvider } from '@blocksuite/global/di';
 import { assertExists } from '@blocksuite/global/utils';
 import type {
   BlockModel,
@@ -87,7 +90,7 @@ export async function getContentFromSlice(
   processTextInSnapshot(snapshot, host);
   const adapter =
     type === 'markdown'
-      ? new MarkdownAdapter(job)
+      ? new MarkdownAdapter(job, host.std.provider)
       : new PlainTextAdapter(job, host.std.provider);
   const content = await adapter.fromSliceSnapshot({
     snapshot,
@@ -122,7 +125,7 @@ export const markdownToSnapshot = async (
     collection: host.std.doc.collection,
     middlewares: [defaultImageProxyMiddleware, pasteMiddleware(host.std)],
   });
-  const markdownAdapter = new MixTextAdapter(job);
+  const markdownAdapter = new MixTextAdapter(job, host.std.provider);
   const { blockVersions, workspaceVersion, pageVersion } =
     host.std.doc.collection.meta;
   if (!blockVersions || !workspaceVersion || !pageVersion)
@@ -190,6 +193,7 @@ export async function replaceFromMarkdown(
 export async function markDownToDoc(
   schema: Schema,
   answer: string,
+  provider: ServiceProvider,
   additionalMiddlewares?: JobMiddleware[]
 ) {
   // Should not create a new doc in the original collection
@@ -205,7 +209,7 @@ export async function markDownToDoc(
     collection,
     middlewares,
   });
-  const mdAdapter = new MarkdownAdapter(job);
+  const mdAdapter = new MarkdownAdapter(job, provider);
   const doc = await mdAdapter.toDoc({
     file: answer,
     assets: job.assetsManager,

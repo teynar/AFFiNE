@@ -20,15 +20,21 @@ export {
   BlockMarkdownAdapterExtension,
   type BlockMarkdownAdapterMatcher,
   BlockMarkdownAdapterMatcherIdentifier,
+  InlineDeltaToMarkdownAdapterExtension,
   type InlineDeltaToMarkdownAdapterMatcher,
   InlineDeltaToMarkdownAdapterMatcherIdentifier,
   isMarkdownAST,
   type Markdown,
+  MarkdownAdapter,
+  MarkdownAdapterFactoryExtension,
+  MarkdownAdapterFactoryIdentifier,
   type MarkdownAST,
+  MarkdownASTToDeltaExtension,
   type MarkdownASTToDeltaMatcher,
   MarkdownASTToDeltaMatcherIdentifier,
   MarkdownDeltaConverter,
 } from './markdown';
+export * from './mix-text';
 export {
   BlockNotionHtmlAdapterExtension,
   type BlockNotionHtmlAdapterMatcher,

@@ -53,5 +53,5 @@ export const embedLinkedDocBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatc
     },
   };
 
-export const EmbedLinkedDocMarkdownAdapterExtension =
+export const EmbedLinkedDocBlockMarkdownAdapterExtension =
   BlockMarkdownAdapterExtension(embedLinkedDocBlockMarkdownAdapterMatcher);

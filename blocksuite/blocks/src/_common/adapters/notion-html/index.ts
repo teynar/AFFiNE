@@ -1,2 +1,2 @@
-export { defaultBlockNotionHtmlAdapterMatchers } from './block-matcher.js';
-export { notionHtmlInlineToDeltaMatchers } from './delta-converter/html-inline.js';
+export { defaultBlockNotionHtmlAdapterMatchers } from './block-matcher';
+export { notionHtmlInlineToDeltaMatchers } from './delta-converter/html-inline';

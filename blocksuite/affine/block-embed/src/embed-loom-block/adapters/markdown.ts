@@ -6,6 +6,5 @@ import { createEmbedBlockMarkdownAdapterMatcher } from '../../common/adapters/ma
 export const embedLoomBlockMarkdownAdapterMatcher =
   createEmbedBlockMarkdownAdapterMatcher(EmbedLoomBlockSchema.model.flavour);
 
-export const EmbedLoomMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  embedLoomBlockMarkdownAdapterMatcher
-);
+export const EmbedLoomBlockMarkdownAdapterExtension =
+  BlockMarkdownAdapterExtension(embedLoomBlockMarkdownAdapterMatcher);
