@@ -13,7 +13,7 @@ import { WorkspacesService } from '@affine/core/modules/workspace';
 import { useI18n } from '@affine/i18n';
 import { track } from '@affine/track';
 import { FrameworkScope, useLiveData, useService } from '@toeverything/infra';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { buildShowcaseWorkspace } from '../../../utils/first-app-data';
 import * as styles from './dialog.css';
